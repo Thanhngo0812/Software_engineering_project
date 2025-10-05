@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div id="background">
+        <div id="login-box">
+            <h1>SchoolTripTrack</h1>
+            <form action="#" onsubmit="return checkNull()">
+                <p>Please sign-in to your account to start</p>
+                <div id="input-box">
+                    <span id="icon"><ion-icon name="person"></ion-icon></span>
+                    <input type="email" placeholder="Email" id="email">
+                </div>
+                <span id="alertE"></span>
+                <div id="input-box">
+                    <span id="icon"><ion-icon name="lock-closed"></ion-icon></span>
+                    <input type="password" placeholder="Password" id="password">
+                </div>
+                <span id="alertPw"></span>
+                <div id="remember-forgot">
+                    <label><input type= "checkbox"> Remember me</label>
+                    <a href="#">Forgot Password</a>
+                </div>
+                <button id="btn" type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+<script src="login.js"></script>
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

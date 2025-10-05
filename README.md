@@ -3,3 +3,4 @@ We are applying knowledge from the Software Engineering course taught by Profess
 Member list:
 1. Ngô Công Thành - 3122560069 (Leader)
 2. Nguyễn Gia Thành - 3124720066
+3. Lê Công Danh - 3123410042
