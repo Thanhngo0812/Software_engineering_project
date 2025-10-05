@@ -4,3 +4,4 @@ Member list:
 1. Ngô Công Thành - 3122560069 (Leader)
 2. Nguyễn Gia Thành - 3124720066
 3. Lê Công Danh - 3123410042
+4. Tạ Nhật Nam Quang - 3123410291
