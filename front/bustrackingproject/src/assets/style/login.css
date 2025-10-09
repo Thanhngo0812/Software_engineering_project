@@ -1,0 +1,123 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+#login-box a{
+    color: rgb(255, 103, 2);
+    text-decoration: none;
+}
+
+
+#background{
+    height: 700px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-image: url(../images/background.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+#login-box{
+    padding: 10px;
+    background-color:rgb(250, 248, 245);
+    border: 1px solid black;
+    width: 350px;
+    height: 380px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+}
+
+#login-box form{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#login-box p{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+#alertE {
+    color: red;
+    margin-left: 5px;
+    font-size: 12px;
+}
+
+#alertPw {
+    color: red;
+    margin-left: 5px;
+    font-size: 12px;
+}
+
+#background h1{
+    color: black;
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+#input-box input{
+    color: black;
+    height: 45px;
+    width: 100%;
+    border: none;
+    margin: 15px 15px 15px 5px;
+    padding: 10px;
+    border-radius: 4px;
+    background: transparent;
+    border: solid 1px;
+    outline: none;
+}
+
+
+#input-box ::placeholder{
+    color: black;
+}
+
+#login-box #btn{
+    margin: 10px;
+    background: white;
+    border-radius: 5px;
+    height: 35px;
+    color: white;
+    background-color:rgb(255, 103, 2);
+    font-size: 17px;
+}
+#remember-forgot{
+    margin: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#input-box{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Cho màn hình nhỏ hơn 768px (tablet + điện thoại) */
+@media (max-width: 768px) {
+    #background{
+        background-image: none;
+        background-color: white;
+    }
+}
+
+/* Cho điện thoại nhỏ hơn 480px */
+@media (max-width: 480px) {
+    #background{
+        background-image: none;
+        background-color: white;
+    }
+}

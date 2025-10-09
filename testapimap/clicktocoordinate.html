@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hệ Thống Theo Dõi Xe Buýt Cơ Bản</title>
+    <style>
+        /* Thiết lập chiều cao cho phần tử chứa bản đồ */
+        #map {
+            height: 50%; 
+            width: 100%;
+        }
+        /* Đảm bảo trang chiếm toàn bộ khung nhìn */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <script>
+        // Khai báo biến toàn cục
+        let map;
+        let busMarker;
+        let clickMarker; // Marker đánh dấu vị trí người dùng click
+        let routeCoordinates; // Mảng lưu trữ lộ trình
+        let currentIndex = 0; // Chỉ số hiện tại của vị trí trên lộ trình
+
+        // --- LỘ TRÌNH MẪU ---
+        routeCoordinates = [
+            { lat: 10.8231, lng: 106.6297 }, 
+            { lat: 10.8250, lng: 106.6350 },
+            { lat: 10.8260, lng: 106.6400 },
+            { lat: 10.8270, lng: 106.6450 },
+            { lat: 10.8280, lng: 106.6500 },
+            { lat: 10.8295, lng: 106.6600 } 
+        ];
+
+        // --- HÀM KHỞI TẠO BẢN ĐỒ ---
+        function initMap() {
+            const initialPosition = routeCoordinates[0]; 
+            
+            // Tạo đối tượng bản đồ
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 12,      
+                center: initialPosition 
+            });
+
+            // Khởi tạo BUS MARKER
+            busMarker = new google.maps.Marker({
+                position: initialPosition,
+                map: map,
+                title: 'Xe Buýt Đang Theo Dõi',
+                icon: {
+                    // Icon xe buýt mẫu. Bạn có thể thay bằng URL ảnh của riêng mình
+                    url: 'https://maps.gstatic.com/mapfiles/ms/micons/bus.png', 
+                    scaledSize: new google.maps.Size(40, 40)
+                }
+            });
+
+            // 1. CHỨC NĂNG: LẤY TỌA ĐỘ KHI CLICK
+            map.addListener("click", (mapsMouseEvent) => {
+                const lat = mapsMouseEvent.latLng.lat(); // Lấy Latitude
+                const lng = mapsMouseEvent.latLng.lng(); // Lấy Longitude
+
+                console.log("---------------------------------------");
+                console.log("Tọa độ click:");
+                console.log(`Latitude: ${lat.toFixed(6)}, Longitude: ${lng.toFixed(6)}`);
+                console.log("---------------------------------------");
+
+                // Đặt Marker tại vị trí click
+                placeClickMarker(mapsMouseEvent.latLng);
+                
+                // Ở đây, bạn sẽ gửi (lat, lng) tới backend của mình bằng AJAX/Fetch API
+            });
+
+            // Bắt đầu mô phỏng di chuyển xe buýt
+            // startBusMovement();
+        }
+
+        // --- CHỨC NĂNG: ĐẶT MARKER TẠI VỊ TRÍ CLICK ---
+        function placeClickMarker(location) {
+             // Xóa marker cũ nếu có
+             if (clickMarker) {
+                clickMarker.setMap(null); 
+            }
+
+            // Tạo marker mới
+            clickMarker = new google.maps.Marker({
+                position: location,
+                map: map,
+                title: `Vị trí đã chọn: ${location.lat().toFixed(4)}, ${location.lng().toFixed(4)}`
+            });
+        }
+        
+        // --- CHỨC NĂNG: MÔ PHỎNG DI CHUYỂN MARKER ---
+        function moveMarker() {
+            // Nếu đi hết lộ trình, quay lại điểm bắt đầu
+            if (currentIndex >= routeCoordinates.length) {
+                currentIndex = 0; 
+            }
+
+            const nextPosition = routeCoordinates[currentIndex];
+            
+            // Cập nhật vị trí và căn giữa bản đồ
+            busMarker.setPosition(nextPosition);
+            map.setCenter(nextPosition);
+            
+            currentIndex++;
+        }
+
+        function startBusMovement() {
+            // Di chuyển sau mỗi 1000ms (1 giây)
+            setInterval(moveMarker, 1000); 
+        }
+    </script>
+
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD9voBEmWYHSA01ICS6ACzw-sLXwrwZNHs&callback=initMap">
+    </script>
+</body>
+</html>
