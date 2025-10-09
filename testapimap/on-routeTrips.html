@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>On-Route Trips</title>
+    <style>
+        body {
+        font-family: Arial, sans-serif;
+        background: #f5f6fa;
+        margin: 0;
+        padding: 20px;
+        font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        }
+
+        .dashboard-card {
+        display: flex;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        padding: 20px;
+        gap: 20px;
+        align-items: center;
+        }
+
+        .left {
+        flex: 1;
+        text-align: center;
+        color: #555;
+        }
+
+        .no-trips {
+        margin-top: 20px;
+        color: #888;
+        }
+
+        .right {
+        flex: 2;
+        }
+
+        #map {
+        width: 100%;
+        height: 300px; /* chỉnh chiều cao theo ý muốn */
+        border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-card">
+        <div class="left">
+        <h3 style="position: fixed; top: 0px; left: 0px; padding-left: 30px; padding-top: 15px ;">On-Route Trips</h3>
+        <div class="no-trips">
+            <!-- icon bus demo -->
+            <div style="font-size:60px;">🚌</div>
+            <p>No on-route trips</p>
+        </div>
+        </div>
+
+        <div class="right">
+        <!-- Đây là nơi Google Maps sẽ render -->
+        <div id="map"></div>
+        </div>
+    </div>
+ <script>
+    // Khai báo biến toàn cục
+    let map;
+    let busMarker;
+    let routeCoordinates; // Mảng lưu trữ lộ trình
+    let currentIndex = 0; // Chỉ số hiện tại của vị trí trên lộ trình
+
+    // Lộ trình mẫu (sample route) ở TP.HCM
+    // Lấy một số điểm gần nhau để mô phỏng xe đang chạy
+    routeCoordinates = [
+        { lat: 10.8231, lng: 106.6297 }, // Điểm xuất phát (TP.HCM)
+        { lat: 10.8250, lng: 106.6350 },
+        { lat: 10.8260, lng: 106.6400 },
+        { lat: 10.8270, lng: 106.6450 },
+        { lat: 10.8280, lng: 106.6500 },
+        { lat: 10.8290, lng: 106.6550 },
+        { lat: 10.8295, lng: 106.6600 }  // Điểm cuối
+    ];
+
+    function initMap() {
+        const initialPosition = routeCoordinates[0]; // Bắt đầu từ điểm đầu tiên
+        
+        // Tạo đối tượng bản đồ
+        map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 12,      
+            center: initialPosition 
+        });
+
+        // Khởi tạo Marker với icon tùy chỉnh (ảnh Naruto của bạn hoặc ảnh xe buýt)
+        busMarker = new google.maps.Marker({
+            position: initialPosition,
+            map: map,
+            title: 'Xe Buýt Đang Theo Dõi',
+            icon: {
+                // Thay thế URL này bằng ảnh xe buýt của bạn (URL trực tiếp)
+                url: './bus-icon.png', 
+                scaledSize: new google.maps.Size(40, 40)
+            }
+        });
+
+        // Bắt đầu di chuyển Marker sau khi bản đồ đã tải
+        startBusMovement();
+    }
+    
+    // Hàm xử lý việc di chuyển Marker
+    function moveMarker() {
+        // Kiểm tra xem đã đi hết lộ trình chưa
+        if (currentIndex < routeCoordinates.length) {
+            const nextPosition = routeCoordinates[currentIndex];
+            
+            // 1. Cập nhật vị trí mới cho Marker
+            busMarker.setPosition(nextPosition);
+            
+            // 2. Cập nhật trung tâm bản đồ theo xe buýt (Tùy chọn)
+            map.setCenter(nextPosition);
+            
+            // Tăng chỉ số để lấy vị trí tiếp theo ở lần lặp sau
+            currentIndex++;
+        } else {
+            // Khi xe buýt đi hết lộ trình, bắt đầu lại (hoặc dừng lại)
+            currentIndex = 0; 
+        }
+    }
+
+    // Hàm thiết lập vòng lặp di chuyển
+    function startBusMovement() {
+        // Sử dụng setInterval để gọi hàm moveMarker() mỗi 1000ms (1 giây)
+        // Trong hệ thống thực tế, bạn sẽ thay thế vòng lặp này bằng dữ liệu GPS thời gian thực
+        setInterval(moveMarker, 1000); // Di chuyển sau mỗi 1 giây
+    }
+</script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD9voBEmWYHSA01ICS6ACzw-sLXwrwZNHs&callback=initMap">
+    </script>
+</body>
+</html>
