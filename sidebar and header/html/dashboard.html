@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SchoolTripTrack</title>
+        <link rel="stylesheet" href="../style.css">
+        <!-- Added Font Awesome for icons -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </head>
+    <body>
+        <div class="layout">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo">SchoolTripTrack</div>
+                </div>
+                <h2 class="sidebar-title">Menu</h2>
+                <a href="dashboard.html" class="active">Dashboard</a>
+                <p>Users</p>
+                <a href="students.html">Students</a>
+                <a href="guardians.html">Guardians</a>
+                <a href="drivers.html">Drivers</a>
+                <p class="medium-text">SYSTEM SETUP</p>
+                <a href="school.html">School</a>
+                <a href="buses.html">Buses</a>
+                <a href="routes.html">Routes</a>
+                <a href="stops.html">Stops</a>
+                <a href="trips.html">Trips</a>
+                <p class="medium-text">LIVE</p>
+                <a href="livetracking.html">Live Tracking</a>
+                <p class="medium-text">REPORTS</p>
+                <a href="timetable.html">Time Table</a>
+                <a href="studentrides.html">Student Rides</a>
+                <a href="driverconflicts.html">Driver Conflicts</a>
+                <p class="medium-text">PLAN</p>
+                <a href="buy.html">Buy</a>
+                <a href="payments.html">Payments</a>
+                <a href="transfercoins.html">Transfer Coins</a>
+            </aside>
+
+            <!-- Main Container (includes top bar and content) -->
+            <div class="main-container">
+                <!-- Top Bar -->
+                <header class="top-bar">
+                    <button class="menu-toggle">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <div class="top-bar-icons">
+                        <i class="fa-solid fa-moon" id="theme-toggle"></i>
+                        
+                        <!-- Notification Icon & Dropdown -->
+                        <div class="icon-container" id="notification-icon-container">
+                            <i class="fa-solid fa-bell"></i>
+                            <span class="notification-badge" style="display: none;"></span>
+                            <div class="dropdown-menu" id="notification-dropdown">
+                                <a href="#" class="dropdown-item">
+                                    <i class="fa-solid fa-id-card"></i>
+                                    <span>Students require review</span>
+                                    <span class="notification-count">1</span>
+                                </a>
+                                <a href="#" class="dropdown-item">
+                                    <i class="fa-solid fa-bus"></i>
+                                    <span>Students need bus assignment</span>
+                                    <span class="notification-count">1</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- User Icon & Dropdown -->
+                        <div class="icon-container" id="user-icon-container">
+                            <i class="fa-solid fa-user"></i>
+                            <div class="dropdown-menu" id="user-dropdown">
+                                <div class="dropdown-profile">
+                                    <img src="https://via.placeholder.com/40" alt="User">
+                                    <div>
+                                        <p class="profile-name">demo</p>
+                                        <p class="profile-role">School</p>
+                                    </div>
+                                </div>
+                                <a href="#" class="dropdown-item">
+                                    <i class="fa-solid fa-user-pen"></i>
+                                    <span>Profile</span>
+                                </a>
+                                <a href="#" class="dropdown-item">
+                                    <i class="fa-solid fa-right-from-bracket"></i>
+                                    <span>Logout</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- Main content -->
+                <main class="content">
+                    <!-- The rest of your page content would go here -->
+                </main>
+            </div>
+        </div>
+
+        <script src="../script.js"></script>
+    </body>
+</html>
