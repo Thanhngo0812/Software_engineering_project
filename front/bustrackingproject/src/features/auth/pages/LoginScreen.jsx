@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamation } from '@fortawesome/free-solid-svg-icons';
+import { faExclamation,faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
+import LoadingSpinner from '../../../components/LoadingSpinner';
 import '../../../assets/style/login.css'
 import { toast } from 'react-toastify';
 import authService from '../services/authService';
@@ -21,10 +22,11 @@ const LoginScreen = () => {
 
   useEffect(() => {
     if (location.state && location.state.message) {
-      toast.info(location.state.message);
+      toast.error(location.state.message);
       navigate(location.pathname, { replace: true, state: {} });
     }
   }, [location, navigate]);
+
   useEffect(() => {
     if (error && error.message) {
         // Sử dụng error.message để gọi toast
@@ -36,7 +38,7 @@ const LoginScreen = () => {
 
   const handleBlurEmail = async (e) => {
     if(!username.trim()){
-      setErrorEmail('Email không được để trống')
+      setErrorEmail('Email cannot be empty.')
     }
     else if(!EMAIL_REGEX.test(username)){
       // setErrorEmail('Email không hợp lệ')
@@ -49,10 +51,10 @@ const LoginScreen = () => {
 
   const handleBlurPassWord = async (e) => {
     if(!password.trim()){
-      setErrorPass('Mật khẩu không được để trống')
+      setErrorPass('Password cannot be empty.')
     }
     else if(password.length<8){
-      setErrorPass('Mật khẩu không được dưới 8 kí tự')
+      setErrorPass('Password must be at least 8 characters long.')
     }
     else{
       setErrorPass('')
@@ -62,11 +64,11 @@ const LoginScreen = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!username || !password) {
-      setError({id:Date.now(),message:'Tên đăng nhập hoặc mật khẩu không hợp lệ'});
+      setError({id:Date.now(),message:'Invalid username or password.'});
       return;
     }
     if(errorEmail||errorPass){
-      setError({id:Date.now(),message:'Tên đăng nhập hoặc mật khẩu không hợp lệ'});
+      setError({id:Date.now(),message:'Invalid username or password.'});
       return;
     }
     try {
@@ -74,11 +76,12 @@ const LoginScreen = () => {
       setLoading(true);
       const response = await login(username, password);
       if (response.token) {
-        if(authService.getUserRole()[0]=='ROLE_STUDENT'){
+        if(authService.getUserRole()[0]=='ROLE_ADMIN'){
           navigate('/student', { replace: true });        }
       }
     } catch (error) {
-      setError({id:Date.now(),message:'Đăng nhập thất bại: ' + (error.response.data.error || error.error)});
+      console.log(1)
+      setError({id:Date.now(),message:'Login failed: ' + (error.response?.data?.error || error.error||'System error')});
     } finally {
       setLoading(false);
     }
@@ -90,6 +93,7 @@ const LoginScreen = () => {
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login</title>
   <link rel="stylesheet" href="login.css" />
+  <LoadingSpinner isLoading={loading} />
   <div id="background">
     <div id="login-box">
       <h1>SchoolTripTrack</h1>
@@ -102,7 +106,7 @@ const LoginScreen = () => {
           <input type="text" placeholder="Email" id="email" style={errorEmail ? {borderColor: 'red'} : {}}  value={username} onBlur={handleBlurEmail} onChange={(e) => setUsername(e.target.value)} />
         </div>
         <span id="alertE" style={{ display: errorEmail ? 'inline' : 'none' }}> 
-    <FontAwesomeIcon icon={faExclamation} style={{ color: 'red', marginRight: '5px' }} /> 
+    <FontAwesomeIcon icon={faCircleExclamation} style={{ color: 'red', marginRight: '5px' }} /> 
     {/* Chỉ cần render trực tiếp errorEmail */}
     {errorEmail} 
 </span>
@@ -113,7 +117,7 @@ const LoginScreen = () => {
           <input type="password" value={password} placeholder="Password" id="password"style={errorPass ? {borderColor: 'red'} : {}}  onBlur={handleBlurPassWord} onChange={(e) => setPassword(e.target.value)} />
         </div>
         <span id="alertPw" style={{ display: errorPass ? 'inline' : 'none' }}> 
-    <FontAwesomeIcon icon={faExclamation} style={{ color: 'red', marginRight: '5px' }} /> 
+    <FontAwesomeIcon icon={faCircleExclamation} style={{ color: 'red', marginRight: '5px' }} /> 
     {/* Chỉ cần render trực tiếp errorEmail */}
     {errorPass} 
 </span>
