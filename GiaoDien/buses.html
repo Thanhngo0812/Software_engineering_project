@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Buses - Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f4f5f8;
+      --card:#fff;
+      --muted:#9aa0a6;
+      --accent:#d78a33;
+      --accent-dark:#b8722a;
+      --orange:#d78a33;
+      --green:#7cb518;
+      --red:#e74c3c;
+      --line:#eceff3;
+      --shadow: 0 6px 18px rgba(18,24,36,0.06);
+      --radius:10px;
+      --gap:18px;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    html,body{height:100%;background:var(--bg);margin:0;color:#333}
+    .wrap{max-width:1180px;margin:36px auto;padding:0 20px}
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:22px;
+      overflow:hidden;
+      border:1px solid #f0f1f4;
+    }
+    
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;
+    }
+    .title{
+      display:flex;gap:12px;align-items:center;
+      font-weight:600;font-size:24px;color:#4b4f56;
+    }
+    .title .icon{
+      width:34px;height:34px;border-radius:8px;background:#fff7eb;color:#d78a33;display:flex;align-items:center;justify-content:center;
+    }
+
+    .btn-create{
+      background:var(--orange);
+      color:white;
+      border:none;
+      padding:12px 20px;
+      border-radius:8px;
+      font-weight:600;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+
+    /* Search */
+    .search{
+      margin-bottom:24px;
+    }
+    .search input{
+      width:100%;padding:14px 16px;border-radius:8px;border:1px solid var(--line);background:transparent;font-size:15px;
+      box-sizing:border-box;
+    }
+
+    /* Table */
+    .table-wrap{overflow-x:auto}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    thead th{
+      text-align:left;padding:18px 12px;color:#8b8f94;font-weight:600;border-bottom:1px solid var(--line);
+    }
+    tbody td{padding:18px 12px;border-bottom:1px solid #f4f5f7;color:#6b6f73}
+    tbody tr:last-child td{border-bottom:none}
+    .col-id{width:80px;color:#9aa0a6;font-weight:600}
+    .col-license{width:150px;color:#6b6f73;font-weight:500}
+    .col-capacity{width:100px;font-weight:600}
+    .col-driver{width:150px}
+    .col-created{width:200px;color:#9aa0a6}
+    .actions-cell{width:120px;text-align:right}
+
+    /* Status badges */
+    .badge{
+      display:inline-block;padding:6px 16px;border-radius:20px;font-weight:600;font-size:12px;
+    }
+    .badge.assigned{background:#7cb518;color:white}
+    .badge.none{background:#e74c3c;color:white}
+
+    /* Action buttons */
+    .action-btns{display:flex;gap:8px;justify-content:flex-end}
+    .icon-btn{
+      border:none;background:transparent;cursor:pointer;padding:6px;color:#9aa0a6;
+      border-radius:4px;
+    }
+    .icon-btn:hover{background:#f8f9fa;color:#6b6f73}
+    .rowpage{background-color: #fff;font-family: Inter;padding: 10px 16px;border-radius: 8px;box-shadow: var(--shadow);display: inline-flex;align-items: center;gap: 8px;margin-bottom: 16px;user-select: none;}
+    /* Responsive */
+    @media (max-width: 768px) {
+      table thead {display: none;}
+      table, tbody, tr, td {display: block;width: 100%;}
+      tbody tr {
+        margin-bottom: 16px;
+        border: 1px solid #eceff3;
+        border-radius: 8px;
+        background: #fff;
+        padding: 12px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      }
+      tbody td {border: none;padding: 8px 0;}
+      tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        display: block;
+        margin-bottom: 4px;
+        color: #555;
+      }
+      .actions-cell {text-align: left;margin-top: 8px;}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="topbar">
+        <div class="title">
+          <div class="icon">
+            🚌
+          </div>
+          Buses
+        </div>
+        <button class="btn-create">
+          CREATE +
+        </button>
+      </div>
+
+      <!-- Search -->
+      <div class="search">
+        <input id="searchInput" placeholder="Search" />
+      </div>
+      <div class="rowpage">
+        row per page
+        <select>
+          <option>5</option>
+          <option>10</option>
+          <option>20</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th class="col-id">ID</th>
+              <th class="col-license">License</th>
+              <th class="col-capacity">Capacity</th>
+              <th class="col-driver">Driver</th>
+              <th class="col-created">Created</th>
+              <th class="actions-cell">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const data = [
+    {id: "13", license: "mh20bd0007", capacity: "40", driver: "none", created: "April 19, 2025 - 2:05 PM"},
+    {id: "16", license: "CA1234", capacity: "30", driver: "abcd", created: "April 28, 2025 - 1:19 PM"},
+    {id: "17", license: "dsadsadas", capacity: "12", driver: "Ahmed", created: "May 1, 2025 - 8:29 PM"},
+    {id: "44", license: "kdm 235t", capacity: "35", driver: "none", created: "July 10, 2025 - 1:40 AM"},
+    {id: "49", license: "342423424", capacity: "34", driver: "houcem", created: "August 10, 2025 - 7:18 PM"},
+    {id: "50", license: "kjhj", capacity: "9", driver: "none", created: "August 11, 2025 - 8:03 PM"},
+    {id: "51", license: "plk6789", capacity: "20", driver: "none", created: "August 12, 2025 - 7:08 PM"},
+    {id: "59", license: "y545", capacity: "500", driver: "none", created: "September 13, 2025 - 12:17 AM"},
+    {id: "62", license: "13566545", capacity: "12", driver: "none", created: "September 18, 2025 - 10:06 AM"},
+    {id: "63", license: "MK15HMD", capacity: "33", driver: "Ayman Saad", created: "September 18, 2025 - 7:46 PM"}
+  ];
+
+  const tableBody = document.getElementById('tableBody');
+  const searchInput = document.getElementById('searchInput');
+
+  let currentQuery = '';
+
+  function render(){
+    let filtered = data;
+
+    if (currentQuery.trim()){
+      const q = currentQuery.toLowerCase();
+      filtered = filtered.filter(r =>
+        r.id.toLowerCase().includes(q) ||
+        r.license.toLowerCase().includes(q) ||
+        r.driver.toLowerCase().includes(q) ||
+        r.capacity.toLowerCase().includes(q)
+      );
+    }
+
+    tableBody.innerHTML = filtered.map(r => `
+      <tr>
+        <td class="col-id" data-label="ID">${r.id}</td>
+        <td class="col-license" data-label="License">${r.license}</td>
+        <td class="col-capacity" data-label="Capacity">${r.capacity}</td>
+        <td class="col-driver" data-label="Driver">
+          <span class="badge ${r.driver === 'none' ? 'none' : 'assigned'}">${r.driver}</span>
+        </td>
+        <td class="col-created" data-label="Created">${r.created}</td>
+        <td class="actions-cell" data-label="Actions">
+          <div class="action-btns">
+            <button class="icon-btn" title="View">👁</button>
+            <button class="icon-btn" title="Edit">✏️</button>
+            <button class="icon-btn" title="Delete">🗑</button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  searchInput.addEventListener('input', (e)=>{
+    currentQuery = e.target.value;
+    render();
+  });
+
+  render();
+</script>
+</body>
+</html>
