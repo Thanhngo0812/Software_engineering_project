@@ -15,7 +15,7 @@ const PublicRoute = () => {
 
     // Kiểm tra và xác định trang cần chuyển hướng dựa trên role
     if (userRoles.includes('ROLE_ADMIN')) {
-      redirectPath = '/admin';
+      redirectPath = '/student';
     } else if (userRoles.includes('ROLE_STUDENT')) {
       redirectPath = '/student';
     }

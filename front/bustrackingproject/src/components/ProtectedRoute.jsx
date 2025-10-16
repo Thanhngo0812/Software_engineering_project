@@ -41,10 +41,10 @@ const ProtectedRoute = ({ requiredRole }) => {
         // Nếu không có quyền cần thiết, chuyển hướng đến trang từ chối truy cập (hoặc trang chủ)
         // Đây là lỗi 403 (Forbidden)
         console.warn(`Access denied. Required role: ${requiredRole}, User role: ${userRole}`);
-        return <Navigate to="/" replace state={{ message: 'Bạn không đủ quyền truy cập trang này.' }} />;
+        return <Navigate to="/" replace state={{ message: 'You do not have permission to access this page.' }} />;
     }
     if(AuthService.isTokenExpired()){
-        return <Navigate to="/" replace state={{ message: 'Bạn đã hết phiên đăng nhập.' }} />;
+        return <Navigate to="/" replace state={{ message: 'Your session has expired.' }} />;
     }
 
     // Nếu đã đăng nhập VÀ có quyền, hiển thị nội dung trang (Outlet là component con)

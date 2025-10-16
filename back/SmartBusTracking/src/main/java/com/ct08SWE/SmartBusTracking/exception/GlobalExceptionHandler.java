@@ -11,14 +11,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Map<String, String>> handleBadCredentials(BadCredentialsException ex) {
         Map<String, String> error = new HashMap<>();
-        error.put("error", "Tên đăng nhập hoặc mật khẩu sai");
+        error.put("error", "Invalid username or password.");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
     
     @ExceptionHandler(org.springframework.security.authentication.LockedException.class)
     public ResponseEntity<Map<String, String>> handleAccountLocked(org.springframework.security.authentication.LockedException ex) {
         Map<String, String> error = new HashMap<>();
-        error.put("error", "Tài khoản của bạn đã bị khóa, hãy liên hệ Admin.");
+        error.put("error", "Your account has been blocked. Please contact administrator.");
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
     

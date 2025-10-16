@@ -29,6 +29,9 @@ function App() {
         <Route element={<PublicRoute />}>
         <Route path="/" element={<LoginScreen />} />
         </Route>
+        <Route element={<ProtectedRoute requiredRole="ROLE_ADMIN" />}>
+                  <Route path="/student" element={<StudentPage/>} />
+        </Route>
         <Route element={<ProtectedRoute requiredRole="ROLE_STUDENT" />}>
                   <Route path="/student" element={<StudentPage/>} />
         </Route>

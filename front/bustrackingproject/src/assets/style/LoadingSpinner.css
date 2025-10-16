@@ -1,0 +1,30 @@
+/* Lớp phủ để làm mờ nền và căn giữa spinner */
+.spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  /* Vòng quay chính */
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 5px solid rgba(255, 255, 255, 0.3); /* Màu nền của vòng quay */
+    border-top-color: #ffffff; /* Màu của phần sẽ quay */
+    animation: spin 1s linear infinite;
+  }
+  
+  /* Animation cho hiệu ứng quay */
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
