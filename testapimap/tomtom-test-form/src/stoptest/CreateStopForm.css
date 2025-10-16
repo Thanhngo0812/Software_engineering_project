@@ -1,0 +1,123 @@
+/* src/CreateStopForm.css */
+.container {
+    display: flex;
+    font-family: Arial, sans-serif;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    max-width: 1200px;
+    margin: 2rem auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-panel {
+    flex: 1;
+    padding: 2rem;
+    background-color: #f9f9f9;
+    min-width: 300px;
+}
+
+.form-panel h2 {
+    margin-top: 0;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #555;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.btn-primary {
+    background-color: #ff9800;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #f57c00;
+}
+
+.map-panel {
+    padding: 20px;
+    flex: 2;
+    min-height: 500px; /* Đảm bảo bản đồ có chiều cao tối thiểu */
+    background-color: #fff; /* Màu nền trong khi bản đồ tải */
+}
+
+
+/* src/CreateStopForm.css */
+
+/* ... (toàn bộ CSS cũ của bạn giữ nguyên) ... */
+
+/* ================================= */
+/* SECTION FOR RESPONSIVE DESIGN     */
+/* ================================= */
+@media (max-width: 768px) {
+    .container {
+        /* Chuyển sang bố cục cột */
+        flex-direction: column;
+
+        /* Cho container chiếm toàn bộ chiều cao màn hình để các con có thể co giãn */
+        height: 100vh;
+        
+        box-shadow: none;
+        border: none;
+    }
+
+    .form-panel {
+        /* Không cho phép form co lại */
+        flex-shrink: 0;
+        min-width: unset;
+        padding: 1rem;
+    }
+
+    .map-panel {
+        /* Ra lệnh cho bản đồ chiếm HẾT không gian dọc còn lại */
+        flex-grow: 1;
+
+        /* Bỏ các thuộc tính chiều cao cũ */
+        /* min-height: 400px; -- REMOVE THIS */
+        /* height: 50vh; -- REMOVE THIS */
+    }
+}

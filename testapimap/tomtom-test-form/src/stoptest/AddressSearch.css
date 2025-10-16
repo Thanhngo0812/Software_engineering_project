@@ -1,0 +1,66 @@
+/* src/AddressSearch.css */
+.search-container {
+    position: relative;
+    width: 100%;
+}
+
+.search-container input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+}
+
+.suggestions-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    z-index: 1000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.suggestions-list li {
+    padding: 0.75rem;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+}
+
+.suggestions-list li:last-child {
+    border-bottom: none;
+}
+
+.suggestions-list li:hover {
+    background-color: #f5f5f5;
+}
+
+.suggestion-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 12px;
+    fill: #757575;
+    flex-shrink: 0;
+}
+
+/* THÊM CLASS NÀY VÀO CUỐI FILE */
+.loading-indicator {
+    padding: 0.75rem;
+    color: #888;
+    font-style: italic;
+    cursor: default; /* Bỏ con trỏ tay khi hover */
+}
+
+.loading-indicator:hover {
+    background-color: white; /* Giữ màu nền trắng khi hover */
+}

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TomTom | Test Vẽ Đường Đi</title>
+    
+    <!-- 1. Tải CSS & JS của TomTom Maps SDK -->
+    <link rel="stylesheet" type="text/css" href="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.1/maps/maps.css" />
+    <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.1/maps/maps-web.min.js"></script>
+    <!-- Tải thêm Services module để dùng Routing API -->
+    <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.1/services/services-web.min.js"></script>
+    
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            font-family: Arial, sans-serif;
+        }
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        .info-box {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="map"></div>
+
+    <div class="info-box">
+        <h3>Test Vẽ Đường Đi</h3>
+        <p>Bản đồ hiển thị đường đi từ Dinh Độc Lập đến Chợ Bến Thành.</p>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const apiKey = 'hFZ9RJP0tWsp9NI1i44vmiT3qIbXVdJn';
+
+            // 1. Khởi tạo bản đồ
+            const map = tt.map({
+                key: apiKey,
+                container: 'map',
+                center: [106.696, 10.775], // Tọa độ trung tâm giữa 2 điểm
+                zoom: 15
+            });
+
+            // 2. Định nghĩa điểm bắt đầu và điểm kết thúc
+            // Tọa độ: [kinh độ, vĩ độ]
+            const startPoint = [106.6952, 10.7770]; // Dinh Độc Lập
+            const endPoint = [106.6983, 10.7725];   // Chợ Bến Thành
+
+            // Thêm marker cho điểm bắt đầu
+            new tt.Marker({ color: 'green' })
+                .setLngLat(startPoint)
+                .setPopup(new tt.Popup({ offset: 35 }).setText('Điểm bắt đầu'))
+                .addTo(map);
+
+            // Thêm marker cho điểm kết thúc
+            new tt.Marker({ color: 'red' })
+                .setLngLat(endPoint)
+                .setPopup(new tt.Popup({ offset: 35 }).setText('Điểm kết thúc'))
+                .addTo(map);
+
+            // 3. Sử dụng services để tính toán đường đi
+            tt.services.calculateRoute({
+                key: apiKey,
+                locations: [startPoint, endPoint]
+            })
+            .then(function(routeData) {
+                // Lấy dữ liệu GeoJSON từ kết quả trả về
+                const geojson = routeData.toGeoJson();
+                
+                // 4. Thêm lớp (layer) đường đi vào bản đồ
+                map.on('load', function() {
+                    // Thêm nguồn dữ liệu cho đường đi
+                    map.addSource('route', {
+                        'type': 'geojson',
+                        'data': geojson
+                    });
+
+                    // Thêm layer để vẽ đường đi
+                    map.addLayer({
+                        'id': 'route',
+                        'type': 'line',
+                        'source': 'route',
+                        'layout': {
+                            'line-join': 'round',
+                            'line-cap': 'round'
+                        },
+                        'paint': {
+                            'line-color': '#4285F4', // Màu xanh của Google
+                            'line-width': 8
+                        }
+                    });
+
+                    // 5. Tự động điều chỉnh khung nhìn để thấy toàn bộ đường đi
+                    const bounds = new tt.LngLatBounds();
+                    geojson.features[0].geometry.coordinates.forEach(function(point) {
+                        bounds.extend(tt.LngLat.convert(point));
+                    });
+                    map.fitBounds(bounds, { padding: 50 }); // Thêm padding 50px
+                });
+            })
+            .catch(function(error) {
+                console.error("Đã xảy ra lỗi khi tính toán đường đi:", error);
+                alert("Không thể tìm thấy đường đi. Vui lòng kiểm tra lại API Key và kết nối mạng.");
+            });
+
+        });
+    </script>
+
+</body>
+</html>

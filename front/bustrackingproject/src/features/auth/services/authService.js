@@ -46,7 +46,7 @@ class AuthService {
 
   // SỬA LỖI Ở ĐÂY: Dùng arrow function để `this` luôn đúng
   isLoggedIn = () => {
-    return !!this.getCurrentUser();
+    return (!!this.getCurrentUser&&!this.isTokenExpired());
   }
 
   // SỬA LỖI Ở ĐÂY: Dùng arrow function

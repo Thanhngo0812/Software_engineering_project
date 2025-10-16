@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "students")
-public class Student {
+@Table(name = "drivers")
+public class Driver {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,26 +21,17 @@ public class Student {
     @JoinColumn(name = "school_id", nullable = false)
     private School school;
     
-    @ManyToOne
-    @JoinColumn(name = "guardian_id", nullable = false)
-    private Guardian guardian;
-    
     @Column(name = "full_name", nullable = false)
     private String fullName;
+    
+    @Column(name = "phone_number", unique = true, nullable = false, length = 20)
+    private String phoneNumber;
     
     @Column(name = "email", unique = true, nullable = false)
     private String email;
     
-    @Column(name = "grade_level", length = 50)
-    private String gradeLevel;
-    
-    @ManyToOne
-    @JoinColumn(name = "pickup_stop_id")
-    private Stop pickupStop;
-    
-    @ManyToOne
-    @JoinColumn(name = "dropoff_stop_id")
-    private Stop dropoffStop;
+    @Column(name = "license_number", unique = true, nullable = false, length = 50)
+    private String licenseNumber;
     
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -48,8 +39,11 @@ public class Student {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
     
-    @OneToMany(mappedBy = "student")
-    private List<Attendance> attendances = new ArrayList<>();
+    @OneToMany(mappedBy = "primaryDriver")
+    private List<Bus> primaryBuses = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "driver")
+    private List<Trip> trips = new ArrayList<>();
     
     @PrePersist
     protected void onCreate() {
@@ -62,7 +56,7 @@ public class Student {
         updatedAt = LocalDateTime.now();
     }
     
-    public Student() {
+    public Driver() {
     }
     
     public Integer getId() {
@@ -89,20 +83,20 @@ public class Student {
         this.school = school;
     }
     
-    public Guardian getGuardian() {
-        return guardian;
-    }
-    
-    public void setGuardian(Guardian guardian) {
-        this.guardian = guardian;
-    }
-    
     public String getFullName() {
         return fullName;
     }
     
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+    
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+    
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
     
     public String getEmail() {
@@ -113,28 +107,12 @@ public class Student {
         this.email = email;
     }
     
-    public String getGradeLevel() {
-        return gradeLevel;
+    public String getLicenseNumber() {
+        return licenseNumber;
     }
     
-    public void setGradeLevel(String gradeLevel) {
-        this.gradeLevel = gradeLevel;
-    }
-    
-    public Stop getPickupStop() {
-        return pickupStop;
-    }
-    
-    public void setPickupStop(Stop pickupStop) {
-        this.pickupStop = pickupStop;
-    }
-    
-    public Stop getDropoffStop() {
-        return dropoffStop;
-    }
-    
-    public void setDropoffStop(Stop dropoffStop) {
-        this.dropoffStop = dropoffStop;
+    public void setLicenseNumber(String licenseNumber) {
+        this.licenseNumber = licenseNumber;
     }
     
     public LocalDateTime getCreatedAt() {
@@ -153,11 +131,20 @@ public class Student {
         this.updatedAt = updatedAt;
     }
     
-    public List<Attendance> getAttendances() {
-        return attendances;
+    public List<Bus> getPrimaryBuses() {
+        return primaryBuses;
     }
     
-    public void setAttendances(List<Attendance> attendances) {
-        this.attendances = attendances;
+    public void setPrimaryBuses(List<Bus> primaryBuses) {
+        this.primaryBuses = primaryBuses;
+    }
+    
+    public List<Trip> getTrips() {
+        return trips;
+    }
+    
+    public void setTrips(List<Trip> trips) {
+        this.trips = trips;
     }
 }
+

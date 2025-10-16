@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Test Bản Đồ TomTom</title>
+    
+    <!-- 1. Tải CSS của TomTom Maps SDK -->
+    <link rel="stylesheet" type="text/css" href="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.1/maps/maps.css" />
+    
+    <style>
+        /* CSS đơn giản để bản đồ hiển thị toàn màn hình */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        #map-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* Box hướng dẫn ở góc trên bên trái */
+        .info-box {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            z-index: 1000; /* Đảm bảo box nằm trên bản đồ */
+            max-width: 300px;
+        }
+
+        .info-box h3 {
+            margin-top: 0;
+        }
+
+        .info-box code {
+            background-color: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="map-container">
+        <!-- Div này là nơi bản đồ sẽ được hiển thị -->
+        <div id="map"></div>
+
+        <div class="info-box">
+            <h3>Test Bản Đồ TomTom</h3>
+            <p>Nếu bạn thấy bản đồ và một điểm đánh dấu ở TP. Hồ Chí Minh, nghĩa là API Key của bạn đã hoạt động chính xác!</p>
+            <p>Hãy sửa file <code>tomtom_map_test.html</code> và dán API Key của bạn vào biến <code>apiKey</code>.</p>
+        </div>
+    </div>
+
+    <!-- 2. Tải JavaScript của TomTom Maps SDK -->
+    <script src="https://api.tomtom.com/maps-sdk-for-web/cdn/6.x/6.25.1/maps/maps-web.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- BƯỚC QUAN TRỌNG NHẤT ---
+            // 3. Dán API Key của bạn vào đây
+            const apiKey = 'hFZ9RJP0tWsp9NI1i44vmiT3qIbXVdJn'; 
+            // -----------------------------
+
+            // Kiểm tra xem người dùng đã thay API key placeholder chưa
+            if (apiKey === 'YOUR_API_KEY_HERE' || !apiKey) {
+                alert('Vui lòng mở file HTML và thay thế "YOUR_API_KEY_HERE" bằng API Key TomTom của bạn.');
+                document.getElementById('map').innerHTML = '<h2 style="text-align: center; padding-top: 50px;">Vui lòng cung cấp API Key để hiển thị bản đồ.</h2>';
+                return;
+            }
+
+            // 4. Khởi tạo bản đồ
+            const map = tt.map({
+                key: apiKey,
+                container: 'map', // ID của div chứa bản đồ
+                center: [106.660172, 10.762622], // Tọa độ trung tâm: TP. Hồ Chí Minh
+                zoom: 13, // Mức độ phóng to ban đầu
+                // ---- SỬA LỖI Ở ĐÂY ----
+                // Thay vì dùng 'tomtom://...', chúng ta định nghĩa style bằng một object
+                // sử dụng đường dẫn 'https://...' mà trình duyệt có thể hiểu được.
+                style: {
+                    'version': 8,
+                    'sources': {
+                        'raster-tiles': {
+                            'type': 'raster',
+                            'tiles': [
+                                `https://api.tomtom.com/map/1/tile/basic/main/{z}/{x}/{y}.png?tileSize=512&key=${apiKey}`
+                            ],
+                            'tileSize': 256
+                        }
+                    },
+                    'layers': [{
+                        'id': 'raster-layer',
+                        'type': 'raster',
+                        'source': 'raster-tiles',
+                        'minzoom': 0,
+                        'maxzoom': 22
+                    }]
+                }
+            });
+
+            // Thêm các nút điều khiển (phóng to/thu nhỏ)
+            map.addControl(new tt.NavigationControl());
+
+            // 5. (Tùy chọn) Thêm một điểm đánh dấu (marker) để xác nhận bản đồ hoạt động
+            const marker = new tt.Marker()
+                .setLngLat([106.660172, 10.762622]) // Cùng tọa độ với trung tâm bản đồ
+                .addTo(map);
+        });
+    </script>
+
+</body>
+</html>
+

@@ -4,25 +4,27 @@ import AuthService from '../features/auth/services/authService'; // Đường d�
 
 const PublicRoute = () => {
   const isAuthenticated = AuthService.isLoggedIn();
-
+  console.log(isAuthenticated)
   // Nếu người dùng đã đăng nhập, không cho phép họ vào trang public (Login, Register...)
   if (isAuthenticated) {
     // Lấy danh sách quyền của người dùng
     const userRoles = AuthService.getUserRole();
-
+    console.log(userRoles)
     // Mặc định chuyển hướng đến trang dashboard chung
-    let redirectPath = '/dashboard'; 
+    let redirectPath = '/'; 
 
     // Kiểm tra và xác định trang cần chuyển hướng dựa trên role
     if (userRoles.includes('ROLE_ADMIN')) {
       redirectPath = '/student';
+      return <Navigate to={redirectPath} replace />;
     } else if (userRoles.includes('ROLE_STUDENT')) {
       redirectPath = '/student';
+      return <Navigate to={redirectPath} replace />;
     }
     // Thêm các else if khác cho các role khác nếu cần
     
     // Thực hiện chuyển hướng
-    return <Navigate to={redirectPath} replace />;
+    
   }
 
   // Nếu người dùng chưa đăng nhập, cho phép họ truy cập
