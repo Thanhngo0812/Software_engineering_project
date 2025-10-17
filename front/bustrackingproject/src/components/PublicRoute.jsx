@@ -15,12 +15,15 @@ const PublicRoute = () => {
 
     // Kiểm tra và xác định trang cần chuyển hướng dựa trên role
     if (userRoles.includes('ROLE_ADMIN')) {
-      redirectPath = '/student';
+      redirectPath = '/admin';
       return <Navigate to={redirectPath} replace />;
     } else if (userRoles.includes('ROLE_STUDENT')) {
       redirectPath = '/student';
       return <Navigate to={redirectPath} replace />;
-    }
+    } else if (userRoles.includes('ROLE_SCHOOL')) {
+    redirectPath = '/school';
+    return <Navigate to={redirectPath} replace />;
+  }
     // Thêm các else if khác cho các role khác nếu cần
     
     // Thực hiện chuyển hướng

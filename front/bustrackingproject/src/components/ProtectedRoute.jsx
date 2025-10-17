@@ -30,8 +30,11 @@ const ProtectedRoute = ({ requiredRole }) => {
  
     // Chỉ thực hiện khi đã kiểm tra xong (isLoading = false)
     // và người dùng chưa đăng nhập
+    if(AuthService.isTokenExpired()){
+      return <Navigate to="/" replace state={{ message: 'Your session has expired.' }} />;
+  }
     if ( !isAuthenticated) {
-        return <Navigate to="/" replace state={{ message: 'Bạn phải đăng nhập để xem trang này.' }} />;
+        return <Navigate to="/" replace state={{ message: 'You do not have permission to access this page.' }} />;
       };
     
  
@@ -43,9 +46,7 @@ const ProtectedRoute = ({ requiredRole }) => {
         console.warn(`Access denied. Required role: ${requiredRole}, User role: ${userRole}`);
         return <Navigate to="/" replace state={{ message: 'You do not have permission to access this page.' }} />;
     }
-    if(AuthService.isTokenExpired()){
-        return <Navigate to="/" replace state={{ message: 'Your session has expired.' }} />;
-    }
+
 
     // Nếu đã đăng nhập VÀ có quyền, hiển thị nội dung trang (Outlet là component con)
     return <Outlet />;

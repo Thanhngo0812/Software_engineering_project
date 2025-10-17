@@ -76,9 +76,17 @@ const LoginScreen = () => {
       setLoading(true);
       const response = await login(username, password);
       if (response.token) {
+        console.error(authService.getUserRole()[0]);
         if(authService.getUserRole()[0]=='ROLE_ADMIN'){
+          navigate('/admin', { replace: true });        }
+        if(authService.getUserRole()[0]=='ROLE_DRIVER'){
+          navigate('/driver', { replace: true });        }
+        if(authService.getUserRole()[0]=='ROLE_STUDENT'){
           navigate('/student', { replace: true });        }
+          if(authService.getUserRole()[0]=='ROLE_SCHOOL'){
+            navigate('/school', { replace: true });        }       
       }
+
     } catch (error) {
       console.log(1)
       setError({id:Date.now(),message:'Login failed: ' + (error.response?.data?.error || error.error||'System error')});

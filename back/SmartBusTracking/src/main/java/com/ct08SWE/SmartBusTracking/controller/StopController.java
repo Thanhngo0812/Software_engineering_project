@@ -13,7 +13,7 @@ import com.ct08SWE.SmartBusTracking.dto.StopResponseDTO;
 import com.ct08SWE.SmartBusTracking.service.StopService;
 
 @RestController
-@RequestMapping("/api/v1/stops")
+@RequestMapping("/api/school/v1/stops")
 public class StopController {
 
     private final StopService stopService;
