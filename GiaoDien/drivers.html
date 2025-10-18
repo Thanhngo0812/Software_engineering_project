@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Drivers - Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#f4f5f8;
+      --card:#fff;
+      --muted:#9aa0a6;
+      --accent:#b47cff;
+      --accent-dark:#7b3bd6;
+      --orange:#d78a33;
+      --green:#78b12a;
+      --line:#eceff3;
+      --shadow: 0 6px 18px rgba(18,24,36,0.06);
+      --radius:10px;
+      --gap:18px;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    html,body{height:100%;background:var(--bg);margin:0;color:#333}
+    .wrap{max-width:1180px;margin:36px auto;padding:0 20px}
+    .card{
+      background:var(--card);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:22px;
+      overflow:hidden;
+      border:1px solid #f0f1f4;
+    }
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;
+    }
+    .title{
+      display:flex;gap:12px;align-items:center;
+      font-weight:600;font-size:20px;color:#4b4f56;
+    }
+    .title .icon{
+      width:34px;height:34px;border-radius:8px;background:#fff7eb;color:#c98f3a;display:flex;align-items:center;justify-content:center;border:1px solid #f3e7d9;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+    }
+    /* Emoji variant for title icon */
+    .title-emoji{
+      font-size:20px; /* adjust to visually match 34x34 */
+      line-height:1;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:34px;
+      height:34px;
+      border-radius:8px;
+      background:#fff7eb;
+      border:1px solid #f3e7d9;
+      box-shadow: 0 1px 0 rgba(0,0,0,0.02);
+    }
+    .title-emoji{ margin-right:8px }
+
+    .actions{
+      display:flex;gap:12px;align-items:center;
+    }
+    /* Tabs */
+    .tabs{display:flex;gap:28px;padding:12px 0;border-bottom:1px solid var(--line);align-items:center}
+    .tab{
+      display:flex;gap:8px;align-items:center;padding:12px 8px;cursor:pointer;color:var(--muted);font-weight:600;border-bottom:3px solid transparent;
+    }
+    .tab--active{color:#c77f2a;border-bottom-color:#e9b97a}
+
+    /* Search */
+    /* Search: underline style like the design */
+    .search{
+      margin:18px 0;padding:8px 0;
+    }
+    .search input{
+      width:100%;padding:12px 0;border:0;border-bottom:1px solid var(--line);background:transparent;font-size:15px;outline:none;color:inherit;
+    }
+
+    /* Table */
+    .table-wrap{overflow-x:auto;margin-top:10px}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    thead th{
+      text-align:left;padding:18px 12px;color:#8b8f94;font-weight:600;border-bottom:1px solid var(--line);
+    }
+  tbody td{padding:14px 12px;border-bottom:1px solid #f4f5f7;color:#6b6f73;vertical-align:middle}
+    tbody tr:last-child td{border-bottom:none}
+    .col-id{width:110px;color:#9aa0a6;font-weight:600}
+    .col-name{width:160px}
+    .col-bus{width:110px}
+    .col-email{width:280px;color:#8a8f94}
+    .col-status{width:120px}
+    .col-created{width:220px;color:#9aa0a6}
+    .actions-cell{width:110px;text-align:right}
+
+    /* Status badge */
+    .badge{
+      display:inline-block;padding:8px 14px;border-radius:999px;font-weight:700;background:linear-gradient(180deg,#339605,#87f583);color:#fff;
+      box-shadow: 0 2px 0 rgba(0,0,0,0.04);
+    }
+    /* Status 'none' style (red) */
+    .badge.none{background:linear-gradient(180deg,#ef4444,#d73737)}
+
+    /* Bus pill styles (colored chips) */
+    .bus-pill{display:inline-block;padding:6px 12px;border-radius:999px;font-weight:700;color:#fff;background:#8b5cf6;box-shadow:0 2px 0 rgba(0,0,0,0.04);font-size:13px}
+    .bus-pill.no{background:#ef4444}
+
+    /* Actions icons */
+    .icon-btn{border:none;background:transparent;cursor:pointer;padding:6px;margin-left:6px;opacity:0.85}
+    .icon-btn:hover{opacity:1}
+
+    /* Pagination/footer */
+    .table-footer{display:flex;justify-content:space-between;align-items:center;padding:12px 6px;margin-top:8px;color:var(--muted);font-size:13px}
+    .rows-per{display:flex;align-items:center;gap:8px;}
+
+    /* Responsive */
+    /* Mobile view: hiển thị dạng card dọc */
+@media (max-width: 768px) {
+  table thead {
+    display: none;
+  }
+  table, tbody, tr, td {
+    display: block;
+    width: 100%;
+  }
+  tbody tr {
+    margin-bottom: 16px;
+    border: 1px solid #eceff3;
+    border-radius: 8px;
+    background: #fff;
+    padding: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+  tbody td {
+    border: none;
+    padding: 8px 0;
+  }
+  tbody td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 4px;
+    color: #555;
+  }
+  .actions-cell {
+    text-align: left;
+    margin-top: 8px;
+  }
+}
+  </style>
+    <!-- pagination nav was moved outside to match other pages -->
+
+<!-- ...existing code... -->
+
+<style>
+/* ...existing styles... */
+
+/* Pagination Navigation */
+.pagination-nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-btn {
+  background: #fff;
+  border: 1px solid #eceff3;
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  color: #6b6f73;
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover:not(:disabled) {
+  background: #f8f9fa;
+  border-color: #d0d5dd;
+}
+
+.nav-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+#pageInfo {
+  font-size: 13px;
+  color: var(--muted);
+  font-weight: 600;
+  min-width: 80px;
+  text-align: center;
+}
+
+.btn-create{
+      background:var(--orange);
+      color:white;
+      border:none;
+      padding:12px 20px;
+      border-radius:8px;
+      font-weight:600;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+/* ...existing styles... */
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" role="region" aria-label="Students panel">
+      <div class="topbar">
+        <div class="title">
+          <!-- Replaced image with emoji icon; decorative role with accessible label -->
+          <span class="title-emoji" role="img" aria-label="Driver">👨‍✈️</span>
+          Drivers
+        </div>
+        <button class="btn-create">
+          CREATE +
+        </button>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs" role="tablist" aria-label="Student tabs">
+        <div class="tab tab--active" role="tab" data-filter="active">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M12 2v20" stroke="#c77f2a" stroke-width="1.6" stroke-linecap="round"/></svg>
+          ACTIVE
+        </div>
+        <div class="tab" role="tab" data-filter="suspended">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden><circle cx="12" cy="12" r="8" stroke="#8f9599" stroke-width="1.2"/></svg>
+          SUSPENDED
+        </div>
+        <div class="tab" role="tab" data-filter="under-review">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden><path d="M4 12h16" stroke="#8f9599" stroke-width="1.2"/></svg>
+          UNDER REVIEW
+        </div>
+      </div>
+
+      <!-- Search -->
+      <div class="search">
+        <input id="searchInput" placeholder="Search" aria-label="Search students"/>
+      </div>
+
+      <div class="table-wrap" role="table" aria-label="Students table">
+        <table>
+          <thead>
+            <tr>
+              <th class="col-id">ID</th>
+              <th class="col-name">Name</th>
+              <th class="col-email">Email</th>
+              <th class="col-bus">Bus</th>
+              <th class="col-status">Status</th>
+              <th class="col-created">Created</th>
+              <th class="actions-cell">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <!-- rows will be inserted here by JS for easier demo -->
+          </tbody>
+        </table>
+      </div>
+
+      <div class="table-footer">
+        <div class="rows-per">Rows per page:
+          <select class= "option-per-pages" id="rowsPer">
+            <option>5</option><option selected>10</option><option>20</option>
+          </select>
+        </div>
+        <div id="paginationInfo">1-4 of 4</div>
+      </div>
+    </div>
+  </div>
+   <div style="max-width:1180px;margin:8px auto 36px;padding:0 20px;display:flex;justify-content:flex-end;">
+    <div class="pagination-nav" aria-hidden>
+      <button id="prevBtn" class="nav-btn" title="Previous page">‹</button>
+      <span id="pageInfo">Page 1 of 1</span>
+      <button id="nextBtn" class="nav-btn" title="Next page">›</button>
+    </div>
+  </div>
+<style>
+.option-per-pages{
+  background: #d0d5dd;
+  border: 2px #333;
+  border-radius: 4px;
+  cursor:pointer;}
+</style>
+
+  <script>
+  // Demo data (mimic screenshot)
+  const data = [
+    {id: "112233", name: "student1", email: "parent@gmail.com", bus:"123",status:"active", created:"March 16, 2025 - 6:57 PM"},
+    {id: "223344", name: "student2", email: "parent@gmail.com", bus:"123",status:"active", created:"March 16, 2025 - 6:58 PM"},
+    {id: "234",    name: "anas", email: "aymansaadhack14@gmail.com", bus:"123",status:"active", created:"September 17, 2025 - 12:55 AM"},
+    {id: "112233", name: "juan", email: "loggier@gmail.com", bus:"123",status:"none", created:"September 24, 2025 - 5:58 AM"},
+    {id: "112233", name: "student1", email: "parent@gmail.com", bus:"123",status:"active", created:"March 16, 2025 - 6:57 PM"},
+    {id: "223344", name: "student2", email: "parent@gmail.com", bus:"123",status:"active", created:"March 16, 2025 - 6:58 PM"},
+    {id: "234",    name: "anas", email: "aymansaadhack14@gmail.com", bus:"123",status:"active", created:"September 17, 2025 - 12:55 AM"},
+    {id: "112233", name: "juan", email: "loggier@gmail.com", bus:"123",status:"active", created:"September 24, 2025 - 5:58 AM"},
+  ];
+  const tableBody = document.getElementById('tableBody');
+  const searchInput = document.getElementById('searchInput');
+  const rowsPer = document.getElementById('rowsPer');
+  const paginationInfo = document.getElementById('paginationInfo');
+  const tabs = document.querySelectorAll('.tab');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const pageInfo = document.getElementById('pageInfo');
+
+  let currentFilter = 'active';
+  let currentQuery = '';
+  let currentRows = parseInt(rowsPer.value);
+  let currentPage = 1;
+  let totalPages = 1;
+
+  function render(){
+    // filter by tab
+    let filtered = data.filter(r => {
+      if (currentFilter === 'active') return r.status === 'active';
+      return r.status === currentFilter;
+    });
+
+    // search filter
+    if (currentQuery.trim()){
+      const q = currentQuery.toLowerCase();
+      filtered = filtered.filter(r =>
+        (r.id || '').toString().toLowerCase().includes(q) ||
+        (r.name || '').toLowerCase().includes(q) ||
+        (r.email || '').toLowerCase().includes(q) ||
+        (r.bus || '').toLowerCase().includes(q)
+      );
+    }
+
+    // pagination
+    const total = filtered.length;
+    totalPages = Math.max(1, Math.ceil(total / currentRows));
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+
+    const startIndex = (currentPage - 1) * currentRows;
+    const endIndex = startIndex + currentRows;
+    const rowsToShow = filtered.slice(startIndex, endIndex);
+
+    tableBody.innerHTML = rowsToShow.map(r => `
+  <tr>
+    <td class="col-id" data-label="ID">${r.id}</td>
+    <td class="col-name" data-label="Name">${r.name}</td>
+    <td class="col-email" data-label="Email">${r.email}</td>
+    <td class="col-bus" data-label="Bus">${r.bus && r.bus.toLowerCase() !== 'none' ? `<span class="bus-pill">${r.bus}</span>` : `<span class="bus-pill no">No</span>`}</td>
+    <td class="col-created" data-label="Created">${r.created}</td>
+    <td class="actions-cell" data-label="Actions">
+      <button class="icon-btn" title="View" aria-label="View">...</button>
+      <button class="icon-btn" title="Edit" aria-label="Edit">...</button>
+      <button class="icon-btn" title="Delete" aria-label="Delete">...</button>
+    </td>
+  </tr>
+`).join('');
+
+    // pagination info and controls
+    const showingStart = total === 0 ? 0 : startIndex + 1;
+    const showingEnd = Math.min(endIndex, total);
+    paginationInfo.textContent = `${showingStart}-${showingEnd} of ${total}`;
+    pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+
+    prevBtn.disabled = currentPage === 1;
+    nextBtn.disabled = currentPage === totalPages || total === 0;
+  }
+
+  function capitalize(s){ return (s || '').charAt(0).toUpperCase() + (s || '').slice(1) }
+
+  // events
+  searchInput.addEventListener('input', (e)=>{
+    currentQuery = e.target.value || '';
+    currentPage = 1;
+    render();
+  });
+
+  rowsPer.addEventListener('change', (e)=>{
+    currentRows = parseInt(e.target.value) || 10;
+    currentPage = 1;
+    render();
+  });
+
+  tabs.forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      tabs.forEach(t=>t.classList.remove('tab--active'));
+      tab.classList.add('tab--active');
+      currentFilter = tab.dataset.filter;
+      currentPage = 1;
+      render();
+    });
+  });
+
+  prevBtn.addEventListener('click', ()=>{
+    if (currentPage > 1) { currentPage--; render(); }
+  });
+
+  nextBtn.addEventListener('click', ()=>{
+    if (currentPage < totalPages) { currentPage++; render(); }
+  });
+
+  // init
+  render();
+</script>
+</body>
+</html>
