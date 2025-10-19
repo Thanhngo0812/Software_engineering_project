@@ -14,10 +14,10 @@ public class Stop {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     
-    @Column(name = "stop_name", nullable = false)
+    @Column(name = "stop_name", nullable = false, unique=true)
     private String stopName;
     
-    @Column(name = "address", columnDefinition = "TEXT")
+    @Column(name = "address", columnDefinition = "TEXT", nullable = false)
     private String address;
     
     @Column(name = "latitude", nullable = false, precision = 10, scale = 8)

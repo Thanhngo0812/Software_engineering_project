@@ -6,11 +6,14 @@ import StudentPage from './features/student/Studentpage.jsx';
 import ProtectedRoute from './components/ProtectedRoute';
 import PublicRoute from './components/PublicRoute';
 //trang school
+import Stop from './features/stop/Stop.jsx';
 import CreateStopForm from './features/stop/CreateStopForm.jsx';
+import StopDetail from './features/stop/StopDetail.jsx';
 import { AuthProvider } from './context/AuthContext';
+import AdminLayout from './components/adminlayout/AdminLayout.jsx';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
-import AdminLayout from './components/adminlayout/AdminLayout.jsx';
+
 
 // // Trang cần bảo vệ (Protected)
 // import BusMap from './features/BusMap/BusMap.jsx';
@@ -34,9 +37,10 @@ function App() {
         </Route>
         <Route element={<ProtectedRoute requiredRole="ROLE_SCHOOL" />}>
         <Route path="/school" element={<AdminLayout />}>
-            <Route index element={<StudentPage />} />
-            <Route path="stop" element={<StudentPage />} />
-              <Route path="stop/createstop" element={<CreateStopForm/>} />
+            <Route index element={<Stop />} />
+            <Route path="stop" element={<Stop />} />
+            <Route path="stop/createstop" element={<CreateStopForm/>} />
+            <Route path="/school/stop/:id" element={<StopDetail />} />
             {/* <Route path="product" element={<Product />} /> */}
           </Route>
                   {/* <Route path="/student" element={<StudentPage/>} /> */}

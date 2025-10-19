@@ -9,17 +9,18 @@ import java.math.BigDecimal;
 // DTO này dùng để nhận dữ liệu từ client khi tạo một Stop mới
 public class StopRequestDTO {
 
-    @NotBlank(message = "Tên trạm dừng không được để trống")
+    @NotBlank(message = "Stop name must no be blank.")
     private String stopName;
-
+    
+    @NotBlank(message = "Address name must no be blank.")
     private String address;
 
-    @NotNull(message = "Vĩ độ không được để trống")
+    @NotNull(message = "latitude must no be blank")
     @DecimalMin(value = "-90.0", message = "Vĩ độ phải lớn hơn hoặc bằng -90")
     @DecimalMax(value = "90.0", message = "Vĩ độ phải nhỏ hơn hoặc bằng 90")
     private BigDecimal latitude;
 
-    @NotNull(message = "Kinh độ không được để trống")
+    @NotNull(message = "longtitude must no be blank")
     @DecimalMin(value = "-180.0", message = "Kinh độ phải lớn hơn hoặc bằng -180")
     @DecimalMax(value = "180.0", message = "Kinh độ phải nhỏ hơn hoặc bằng 180")
     private BigDecimal longitude;

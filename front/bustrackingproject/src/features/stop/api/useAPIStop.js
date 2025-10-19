@@ -33,8 +33,16 @@ const useApiStop = () => {
 
             // Nếu response không thành công (status code không phải 2xx)
             if (!response.ok) {
-                // Đọc lỗi từ body (nếu có) và ném ra để catch xử lý
                 const errorData = await response.json();
+            
+                // Nếu errorData.errors tồn tại thì lấy thông báo đầu tiên
+                if (errorData.errors) {
+                    // Lấy lỗi đầu tiên trong object errors (ví dụ stopName)
+                    const firstErrorKey = Object.keys(errorData.errors)[0];
+                    const firstErrorMessage = errorData.errors[firstErrorKey];
+                    throw new Error(firstErrorMessage);
+                }
+            
                 throw new Error(errorData.message || 'Something went wrong');
             }
 
@@ -45,9 +53,7 @@ const useApiStop = () => {
 
         } catch (err) {
             // Lưu lỗi vào state
-            setError(err.message);
-            console.error("Failed to create stop:", err);
-            // Ném lỗi ra ngoài để component biết là đã thất bại
+                       // Ném lỗi ra ngoài để component biết là đã thất bại
             throw err;
         } finally {
             // Luôn tắt trạng thái loading sau khi hoàn tất

@@ -3,7 +3,8 @@
 
 -- Drop the database if it exists to start fresh
 DROP DATABASE IF EXISTS smart_bus_tracking;
-CREATE DATABASE smart_bus_tracking;
+CREATE DATABASE smart_bus_tracking CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
 USE smart_bus_tracking;
 
 -- =============================================
@@ -90,8 +91,8 @@ CREATE TABLE IF NOT EXISTS guardians (
 
 CREATE TABLE IF NOT EXISTS stops (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    stop_name VARCHAR(255) NOT NULL,
-    address TEXT,
+    stop_name VARCHAR(255) UNIQUE NOT NULL,
+    address TEXT NOT NULL,
     latitude DECIMAL(10, 8) NOT NULL,
     longitude DECIMAL(11, 8) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -194,12 +195,12 @@ CREATE TABLE IF NOT EXISTS live_tracking (
 
 -- 1. Create User accounts for login
 INSERT INTO `users` (id, username, email, password) VALUES
-(1, 'admin@smartbus.com', 'admin@smartbus.com', '$2a$10$3zZ2Y.z7.eN5bJzK.v1cI.2I8.kL5I.3H8.gD9.hJ.aL4.qL3.mG'),
-(2, 'school.isv@smartbus.com', 'school.isv@smartbus.com', '$2a$10$3zZ2Y.z7.eN5bJzK.v1cI.2I8.kL5I.3H8.gD9.hJ.aL4.qL3.mG'),
-(3, 'driver.an@example.com', 'driver.an@example.com', '$2a$10$3zZ2Y.z7.eN5bJzK.v1cI.2I8.kL5I.3H8.gD9.hJ.aL4.qL3.mG'),
-(4, 'driver.binh@example.com', 'driver.binh@example.com', '$2a$10$3zZ2Y.z7.eN5bJzK.v1cI.2I8.kL5I.3H8.gD9.hJ.aL4.qL3.mG'),
-(5, 'student.minh@example.com', 'student.minh@example.com', '$2a$10$3zZ2Y.z7.eN5bJzK.v1cI.2I8.kL5I.3H8.gD9.hJ.aL4.qL3.mG'),
-(6, 'student.han@example.com', 'student.han@example.com', '$2a$10$3zZ2Y.z7.eN5bJzK.v1cI.2I8.kL5I.3H8.gD9.hJ.aL4.qL3.mG');
+(1, 'admin@smartbus.com', 'admin@smartbus.com', '$2a$10$YrCP/3TM6Gfx0sOhCQ2V..8aihMHExTJpsDWoEdc029EwFdiZ5RXC'),
+(2, 'school.isv@smartbus.com', 'school.isv@smartbus.com', '$2a$10$YrCP/3TM6Gfx0sOhCQ2V..8aihMHExTJpsDWoEdc029EwFdiZ5RXC'),
+(3, 'driver.an@example.com', 'driver.an@example.com', '$2a$10$YrCP/3TM6Gfx0sOhCQ2V..8aihMHExTJpsDWoEdc029EwFdiZ5RXC'),
+(4, 'driver.binh@example.com', 'driver.binh@example.com', '$2a$10$YrCP/3TM6Gfx0sOhCQ2V..8aihMHExTJpsDWoEdc029EwFdiZ5RXC'),
+(5, 'student.minh@example.com', 'student.minh@example.com', '$2a$10$YrCP/3TM6Gfx0sOhCQ2V..8aihMHExTJpsDWoEdc029EwFdiZ5RXC'),
+(6, 'student.han@example.com', 'student.han@example.com', '$2a$10$YrCP/3TM6Gfx0sOhCQ2V..8aihMHExTJpsDWoEdc029EwFdiZ5RXC');
 
 -- 2. Assign Roles to Users
 INSERT INTO `user_roles` (user_id, role_id) VALUES
@@ -263,3 +264,4 @@ INSERT INTO live_tracking (trip_id, latitude, longitude, speed, timestamp) VALUE
 (1, 10.7798, 106.6991, 0.0, NOW()), -- At the first stop
 (1, 10.7775, 106.6988, 25.5, DATE_ADD(NOW(), INTERVAL 1 MINUTE)); -- Moving towards the next stop
 
+ALTER DATABASE smart_bus_tracking   CHARACTER SET utf8mb4   COLLATE utf8mb4_unicode_ci

@@ -20,7 +20,6 @@ const MapPicker = ({ apiKey, initialPosition,inputPosition, onPositionChange }) 
             const address = response.addresses[0]?.address.freeformAddress || 'Address not found';
             onPositionChange(position, address);
         } catch (error) {
-            console.error("Reverse geocoding error:", error);
             onPositionChange(position, 'Could not fetch address');
         }
     }, [apiKey, onPositionChange]); // onPositionChange giờ đã ổn định

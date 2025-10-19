@@ -1,17 +1,21 @@
 package com.ct08SWE.SmartBusTracking.exception;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.*;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import io.jsonwebtoken.ExpiredJwtException;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     // Xử lý các exception tùy chỉnh của bạn
     @ExceptionHandler(StopCreationException.class)
     public ResponseEntity<ErrorResponse> handleStopCreationException(StopCreationException ex, WebRequest request) {
@@ -46,6 +50,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
     
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<Map<String, Object>> handleExpiredJwtException(ExpiredJwtException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("status", HttpStatus.UNAUTHORIZED.value());
+        body.put("message", "Your session has been expired");
+        return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+    }
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, String>> handleRuntimeException(RuntimeException ex) {
         Map<String, String> error = new HashMap<>();
@@ -72,17 +83,22 @@ public class GlobalExceptionHandler {
         
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
-    
-    // Xử lý các exception chung khác (fallback)
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGlobalException(Exception ex, WebRequest request) {
-        ErrorResponse errorResponse = new ErrorResponse(
-            LocalDateTime.now(),
-            HttpStatus.INTERNAL_SERVER_ERROR.value(),
-            "Internal Server Error",
-            ex.getMessage(),
-            request.getDescription(false).replace("uri=", "")
-        );
-        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    // lỗi jpa
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<String> handleUniqueConstraintViolation(DataIntegrityViolationException ex) {
+        // Kiểm tra thông tin lỗi trong exception message hoặc root cause
+        Throwable rootCause = ex.getRootCause();
+        if (rootCause != null && rootCause.getMessage().contains("unique_stop_name")) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Stop name already exists");
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Database error: " + ex.getMessage());
     }
+    // Xử lý các exception chung khác (fallback)
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleResourceNotFoundException(ResourceNotFoundException ex) {
+         Map<String, String> error = new HashMap<>();
+         error.put("error", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+ 
 }

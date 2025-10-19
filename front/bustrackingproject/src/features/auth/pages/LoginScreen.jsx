@@ -88,7 +88,6 @@ const LoginScreen = () => {
       }
 
     } catch (error) {
-      console.log(1)
       setError({id:Date.now(),message:'Login failed: ' + (error.response?.data?.error || error.error||'System error')});
     } finally {
       setLoading(false);
