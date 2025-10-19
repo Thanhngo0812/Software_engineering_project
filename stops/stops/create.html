@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="vi">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Create Stop - SchoolTripTrack</title>
+        <link rel="stylesheet" href="../style.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </head>
+    <body>
+        <div class="layout">
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <div class="logo">SchoolTripTrack</div>
+                </div>
+                <h2 class="sidebar-title">Menu</h2>
+                <a href="../dashboard.html">Dashboard</a>
+                <p>Users</p>
+                <a href="../students.html">Students</a>
+                <a href="../guardians.html">Guardians</a>
+                <a href="../drivers.html">Drivers</a>
+                <p class="medium-text">SYSTEM SETUP</p>
+                <a href="../school.html">School</a>
+                <a href="../buses.html">Buses</a>
+                <a href="../routes.html">Routes</a>
+                <a href="../stops.html" class="active">Stops</a>
+                <a href="../trips.html">Trips</a>
+                <p class="medium-text">LIVE</p>
+                <a href="../livetracking.html">Live Tracking</a>
+                <p class="medium-text">REPORTS</p>
+                <a href="../timetable.html">Time Table</a>
+                <a href="../studentrides.html">Student Rides</a>
+                <a href="../driverconflicts.html">Driver Conflicts</a>
+                <p class="medium-text">PLAN</p>
+                <a href="../buy.html">Buy</a>
+                <a href="../payments.html">Payments</a>
+                <a href="../transfercoins.html">Transfer Coins</a>
+            </aside>
+
+            <div class="main-container">
+                <header class="top-bar">
+                    <button class="menu-toggle"><i class="fa-solid fa-bars"></i></button>
+                    <div class="top-bar-icons">
+                        <i class="fa-solid fa-moon" id="theme-toggle"></i>
+                    </div>
+                </header>
+
+                <main class="content">
+                    <div class="content-header">
+                        <div class="content-title">
+                            <i class="fa-solid fa-map-location-dot"></i>
+                            <h2>Create new stop</h2>
+                        </div>
+                        <div class="content-actions">
+                            <a href="../stops.html" class="btn btn-secondary" id="cancel-create">CANCEL</a>
+                            <button class="btn btn-primary" id="save-stop">SAVE</button>
+                        </div>
+                    </div>
+
+                    <div class="create-form">
+                        <div class="form-inputs">
+                            <input type="text" id="stop-name" placeholder="Stop Name">
+                            <input type="text" id="stop-address" placeholder="Stop Address">
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+
+        <script src="../script.js"></script>
+    </body>
+</html>
