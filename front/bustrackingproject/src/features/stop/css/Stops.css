@@ -68,6 +68,7 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 14px;
+    
 }
 
 .stops-table th,
@@ -92,11 +93,15 @@
     background-color: #fcfcfc;
 }
 
+
 /* Cột "Actions" và các nút icon */
 .actions-cell {
-    display: flex;
     align-items: center;
+    white-space: nowrap; /* Ngăn các nút xuống hàng */
+
     gap: 10px;
+
+
 }
 
 .icon-button {

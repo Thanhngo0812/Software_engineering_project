@@ -9,12 +9,20 @@ import PublicRoute from './components/PublicRoute';
 import Stop from './features/stop/Stop.jsx';
 import CreateStopForm from './features/stop/CreateStopForm.jsx';
 import StopDetail from './features/stop/StopDetail.jsx';
+import DriverPage from './features/driver/DriverPage.js';
 import { AuthProvider } from './context/AuthContext';
 import AdminLayout from './components/adminlayout/AdminLayout.jsx';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
+import Routess from './features/route/Route.js';
+import CreateRouteForm from './features/route/CreateRouteForm.js'
+import RouteDetail from './features/route/RouteDetail.js';
+import TripPage from './features/trip/TripPage.js';
+import BusPage from './features/bus/BusPage.js';
+import ParentTrackingPage from './features/parent-app/ParentTrackingPage.js';
 
-
+//tai xe
+import DriverDashboard from './features/driver-app/DriverDashboard.js';
 // // Trang cần bảo vệ (Protected)
 // import BusMap from './features/BusMap/BusMap.jsx';
 // import AdminDashboard from './features/Admin/AdminDashboard.jsx';
@@ -40,7 +48,17 @@ function App() {
             <Route index element={<Stop />} />
             <Route path="stop" element={<Stop />} />
             <Route path="stop/createstop" element={<CreateStopForm/>} />
+           <Route path="/school/stop/edit/:id" element={<CreateStopForm />} />
+
             <Route path="/school/stop/:id" element={<StopDetail />} />
+           <Route path="route" element={<Routess/>} />
+            <Route path="route/create" element={<CreateRouteForm/>} />
+           <Route path="/school/route/edit/:id" element={<CreateRouteForm />} />
+            <Route path="/school/route/:id" element={<RouteDetail />} />
+            <Route path="trip" element={<TripPage/>}/>
+            <Route path="student" element={<StudentPage/>}/>
+             <Route path="driver" element={<DriverPage/>}/>
+             <Route path="bus" element={<BusPage/>}/>
             {/* <Route path="product" element={<Product />} /> */}
           </Route>
                   {/* <Route path="/student" element={<StudentPage/>} /> */}
@@ -48,8 +66,8 @@ function App() {
         <Route element={<ProtectedRoute requiredRole="ROLE_STUDENT" />}>
                   <Route path="/student" element={<StudentPage/>} />
         </Route>
-
-        
+          <Route path='/driver' element={<DriverDashboard/>}/>
+        <Route path="/tracking/:studentId" element={<ParentTrackingPage />} />
        
       </Routes>
       <ToastContainer

@@ -1,0 +1,18 @@
+{
+  "name": "smartbus-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "tasks.max": "1",
+    "database.hostname": "smartbus-core-postgres",
+    "database.port": "5432",
+    "database.user": "postgres",
+    "database.password": "password",
+    "database.dbname": "smart_bus_tracking",
+    "database.server.name": "smartbus",
+    "plugin.name": "pgoutput",
+    "table.include.list": "public.attendance",
+    "database.history.kafka.bootstrap.servers": "kafkasmartbus:29092",
+    "database.history.kafka.topic": "schema-changes.smartbus"
+  }
+}
+

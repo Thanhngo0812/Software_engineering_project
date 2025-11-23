@@ -12,10 +12,10 @@ public class Route {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    
-    @ManyToOne
-    @JoinColumn(name = "school_id", nullable = false)
-    private School school;
+
+
+    @Column(name = "school_id", nullable = false)
+    private Integer schoolId;
     
     @Column(name = "route_name", nullable = false)
     private String routeName;
@@ -48,7 +48,16 @@ public class Route {
     
     public Route() {
     }
-    
+    // Dùng để thêm Stop vào Route và tự động gán Route cho Stop
+    public void addStop(RouteStop stop) {
+        routeStops.add(stop);
+        stop.setRoute(this); // Dòng này giúp Hibernate biết ID của Route để điền vào RouteStop
+    }
+
+    public void removeStop(RouteStop stop) {
+        routeStops.remove(stop);
+        stop.setRoute(null);
+    }
     public Integer getId() {
         return id;
     }
@@ -57,12 +66,12 @@ public class Route {
         this.id = id;
     }
     
-    public School getSchool() {
-        return school;
+    public Integer getSchool() {
+        return schoolId;
     }
     
-    public void setSchool(School school) {
-        this.school = school;
+    public void setSchool(Integer school) {
+        this.schoolId = school;
     }
     
     public String getRouteName() {

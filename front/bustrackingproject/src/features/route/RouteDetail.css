@@ -1,0 +1,173 @@
+/* Header với nút Back */
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.btn-back {
+    background: none;
+    border: none;
+    color: #555;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.btn-back:hover {
+    color: #007bff;
+}
+
+.btn-edit-link {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.btn-edit-link:hover {
+    background-color: #0056b3;
+}
+
+/* Panel bên trái */
+.detail-view-panel {
+    background-color: #fff;
+}
+
+.detail-title-block {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.detail-title-block h1 {
+    margin: 0 0 10px 0;
+    font-size: 22px;
+    color: #333;
+}
+
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.status-badge.active {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status-badge.draft {
+    background-color: #e2e3e5;
+    color: #383d41;
+}
+
+.detail-section {
+    margin-bottom: 20px;
+}
+
+.detail-section label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+
+.detail-text {
+    margin: 0;
+    color: #333;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+/* Thống kê nhỏ */
+.detail-stats {
+    display: flex;
+    gap: 15px;
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.stat-item .icon {
+    font-size: 24px;
+    color: #007bff;
+    opacity: 0.7;
+}
+
+.stat-item div {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-item strong {
+    font-size: 16px;
+    color: #333;
+}
+
+.stat-item span {
+    font-size: 11px;
+    color: #666;
+}
+
+/* Timeline đơn giản */
+.simple-timeline ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    border-left: 2px solid #e9ecef;
+    margin-left: 10px;
+}
+
+.simple-timeline li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #555;
+}
+
+.simple-timeline .dot {
+    position: absolute;
+    left: -5px;
+    top: 6px;
+    width: 8px;
+    height: 8px;
+    background-color: #adb5bd;
+    border-radius: 50%;
+}
+
+.simple-timeline h3 {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+
+/* List bên phải (Readonly) */
+.stop-row.readonly {
+    cursor: default;
+}
+.stop-row.readonly:hover {
+    background-color: #fff; /* Không đổi màu nền khi hover */
+}

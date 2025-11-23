@@ -19,6 +19,7 @@ import com.ct08SWE.SmartBusTracking.mapper.GetStopResponseMapper;
 import com.ct08SWE.SmartBusTracking.mapper.StopDetailDTOMapper;
 import com.ct08SWE.SmartBusTracking.repository.RouteStopsRepository;
 import com.ct08SWE.SmartBusTracking.repository.StopRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class StopServiceImpl implements StopService {
@@ -101,7 +102,10 @@ public class StopServiceImpl implements StopService {
             throw new StopCreationException("Không thể tạo trạm dừng mới: " + e.getMessage());
         }
     }
-    
+
+
+
+
     public boolean deleteStop(Long stopId) throws ResourceNotFoundException {
         Stop stop = stopRepository.findById(stopId)
                     .orElseThrow(() -> new ResourceNotFoundException("Stop không tồn tại với ID: " + stopId));
@@ -117,6 +121,27 @@ public class StopServiceImpl implements StopService {
         // Không có liên kết, TIẾN HÀNH XÓA
         stopRepository.delete(stop);
         return true;
+    }
+
+    @Override
+    public StopResponseDTO updateStop(int id, StopRequestDTO stopRequestDto) {
+        Stop stop = stopRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Stop not found with id: " + id));
+
+        stop.setStopName(stopRequestDto.getStopName());
+        stop.setAddress(stopRequestDto.getAddress());
+        // Cập nhật tọa độ
+        stop.setLatitude(stopRequestDto.getLatitude());
+        stop.setLongitude(stopRequestDto.getLongitude());
+
+        Stop savedStop = stopRepository.save(stop);
+        return new StopResponseDTO(
+                savedStop.getId(),
+                savedStop.getStopName(),
+                savedStop.getAddress(),
+                savedStop.getLatitude(),
+                savedStop.getLongitude()
+        );
     }
 
 }

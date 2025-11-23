@@ -1,0 +1,209 @@
+version: '3.8'
+
+services:
+  # --- INFRASTRUCTURE (GIỮ NGUYÊN) ---
+  redis-insight-smartbus:
+    image: redislabs/redisinsight:1.14.0
+    container_name: redis-insight-smartbus
+    restart: always
+    ports:
+      - "8010:8001"     # UI chạy ở http://localhost:8010
+    volumes:
+      - redis_insight_data:/data
+    networks:
+      - smartbus-net
+
+  smartbus-core-postgres:
+    image: postgres:15-alpine
+    container_name: smartbus-core-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: 'smart_bus_tracking'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'password'
+    command:
+      - "postgres"
+      - "-c"
+      - "wal_level=logical"
+    ports:
+      - "4445:5432"
+    volumes:
+      - postgres_core_data:/var/lib/postgresql/data
+      - ./core_db:/docker-entrypoint-initdb.d
+    networks:
+      - smartbus-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  smartbus-postgres:
+    image: postgres:15-alpine
+    container_name: smartbus-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: 'smart_bus_tracking_db'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'password'
+    ports:
+      - "4444:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./trackingservice_db:/docker-entrypoint-initdb.d
+    networks:
+      - smartbus-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  smartbus-redis:
+    image: redis:alpine
+    container_name: smartbus-redis
+    restart: always
+    ports:
+      - "6666:6379"
+    networks:
+      - smartbus-net
+
+  zookeepersmartbus:
+    image: confluentinc/cp-zookeeper:7.4.0
+    container_name: zookeepersmartbus
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "1111:2181"
+    networks:
+      - smartbus-net
+
+  kafkasmartbus:
+    image: confluentinc/cp-kafka:7.4.0
+    container_name: kafkasmartbus
+    depends_on:
+      - zookeepersmartbus
+    ports:
+      - "9999:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeepersmartbus:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafkasmartbus:29092,PLAINTEXT_HOST://localhost:9999
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - smartbus-net
+    healthcheck:
+      test: nc -z localhost 9092 || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 15
+
+  kafka-ui-smartbus:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka-ui-smartbus
+    depends_on:
+      - kafkasmartbus
+    ports:
+      - "8090:8080"
+    environment:
+      KAFKA_CLUSTERS_0_NAME: local
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafkasmartbus:29092
+    networks:
+      - smartbus-net
+
+  # --- APP SERVICES (MỚI THÊM) ---
+
+  core-service:
+    build: ./coreservice # Đường dẫn tới thư mục chứa Dockerfile của Core
+    container_name: core-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      smartbus-core-postgres:
+        condition: service_healthy
+      kafkasmartbus:
+        condition: service_healthy
+    environment:
+      # Override cấu hình DB trỏ vào tên container 'smartbus-mysql'
+      SPRING_DATASOURCE_URL: jdbc:postgresql://smartbus-core-postgres:5432/smart_bus_tracking
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
+      # Kafka nội bộ dùng cổng 29092
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafkasmartbus:29092
+    networks:
+      - smartbus-net
+
+  tracking-service:
+    build: ./trackingservice # Đường dẫn tới thư mục chứa Dockerfile của Tracking
+    container_name: tracking-service
+    ports:
+      - "8082:8082"
+    depends_on:
+      smartbus-postgres:
+        condition: service_healthy
+      smartbus-redis:
+        condition: service_started
+      kafkasmartbus:
+        condition: service_healthy
+      core-service:
+        condition: service_started
+    environment:
+      # Override cấu hình DB trỏ vào tên container 'smartbus-postgres'
+      SPRING_DATASOURCE_URL: jdbc:postgresql://smartbus-postgres:5432/smart_bus_tracking_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: password
+      # Redis
+      SPRING_DATA_REDIS_HOST: smartbus-redis
+      SPRING_DATA_REDIS_PORT: 6379
+      # Kafka
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafkasmartbus:29092
+      # Gọi sang Core Service bằng tên container
+      CORE_SERVICE_URL: http://core-service:8081
+    networks:
+      - smartbus-net
+
+
+  notification-service:
+    build: ./notificationservice
+    container_name: notification-service
+    ports:
+      - "8089:8089"
+    depends_on:
+      smartbus-redis:
+        condition: service_started
+      kafkasmartbus:
+        condition: service_healthy
+    environment:
+      SPRING_DATA_REDIS_HOST: smartbus-redis
+      SPRING_DATA_REDIS_PORT: 6379
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafkasmartbus:29092
+    networks:
+      - smartbus-net
+
+  debezium-smartbus:
+    image: debezium/connect:1.9
+    container_name: debezium-smartbus
+    ports:
+      - "8088:8083"
+    environment:
+      - BOOTSTRAP_SERVERS=kafkasmartbus:29092
+      - GROUP_ID=1
+      - CONFIG_STORAGE_TOPIC=my_connect_configs
+      - OFFSET_STORAGE_TOPIC=my_connect_offsets
+      - STATUS_STORAGE_TOPIC=my_connect_statuses
+    depends_on:
+      - kafkasmartbus
+    networks:
+      - smartbus-net
+
+volumes:
+  postgres_core_data:
+  postgres_data:
+  redis_insight_data:
+
+networks:
+  smartbus-net:
+    driver: bridge

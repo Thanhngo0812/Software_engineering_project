@@ -1,0 +1,63 @@
+/* Import lại style gốc của Driver Page để dùng chung bảng, nút... */
+@import '../driver/DriverPage.css';
+
+/* --- Custom Styles cho Trip Page --- */
+
+/* Modal rộng hơn để chứa Map */
+.trip-modal-wide {
+    max-width: 900px !important; /* Rộng hơn */
+    width: 95%;
+    height: auto;
+    min-height: 550px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Layout 2 cột trong Modal */
+.trip-form-layout {
+    display: flex;
+    gap: 20px;
+    flex: 1;
+}
+
+.trip-form-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 300px;
+}
+
+.trip-map-side {
+    flex: 1.5; /* Map rộng hơn form */
+    position: relative;
+    min-height: 400px;
+}
+
+/* Placeholder khi chưa có Map */
+.map-placeholder {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(255,255,255,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-style: italic;
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* Responsive cho Modal trên mobile */
+@media (max-width: 768px) {
+    .trip-form-layout {
+        flex-direction: column;
+    }
+    .trip-map-side {
+        height: 300px; /* Map ngắn lại trên mobile */
+        flex: none;
+    }
+    .trip-modal-wide {
+        max-height: 90vh;
+        overflow-y: auto; /* Cuộn dọc modal */
+    }
+}

@@ -43,10 +43,7 @@ public class School {
     
     @OneToMany(mappedBy = "school", cascade = CascadeType.ALL)
     private List<Student> students = new ArrayList<>();
-    
-    @OneToMany(mappedBy = "school", cascade = CascadeType.ALL)
-    private List<Route> routes = new ArrayList<>();
-    
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
@@ -149,11 +146,5 @@ public class School {
         this.students = students;
     }
     
-    public List<Route> getRoutes() {
-        return routes;
-    }
-    
-    public void setRoutes(List<Route> routes) {
-        this.routes = routes;
-    }
+
 }

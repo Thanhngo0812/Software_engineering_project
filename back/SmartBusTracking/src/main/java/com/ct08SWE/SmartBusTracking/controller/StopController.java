@@ -12,14 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ct08SWE.SmartBusTracking.dto.GetStopsResponse;
 import com.ct08SWE.SmartBusTracking.dto.StopDetailDTO;
 import com.ct08SWE.SmartBusTracking.dto.StopRequestDTO;
@@ -80,7 +73,15 @@ public class StopController {
         StopResponseDTO createdStop = stopService.createStop(stopRequestDto);
         return new ResponseEntity<>(createdStop, HttpStatus.CREATED);
     }
-    
+
+    // 4. Cập nhật Stop
+    @PutMapping("/{id}")
+    public ResponseEntity<StopResponseDTO> updateStop(
+            @PathVariable Integer id,
+            @Valid @RequestBody StopRequestDTO request) {
+        return ResponseEntity.ok(stopService.updateStop(id, request));
+    }
+
     @DeleteMapping("/{stopId}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('SCHOOL')") 
     public ResponseEntity<Map<String, String>> deleteStop(@PathVariable Long stopId) {

@@ -11,25 +11,25 @@ import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
-
-    private final StudentRepository studentRepository;
-
-    @Autowired
-    public StudentService(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository;
-    }
-
-    /**
-     * Lấy danh sách tất cả học sinh và chuyển đổi sang DTO.
-     * @return List<StudentResponseDTO>
-     */
-    public List<StudentResponseDTO> getAllStudents() {
-        // 1. Lấy tất cả Student entity từ CSDL
-        List<Student> students = studentRepository.findAll();
-
-        // 2. Dùng stream để duyệt qua danh sách và chuyển đổi mỗi Student entity thành StudentResponseDTO
-        return students.stream()
-                .map(student -> new StudentResponseDTO(student))
-                .collect(Collectors.toList());
-    }
+//
+//    private final StudentRepository studentRepository;
+//
+//    @Autowired
+//    public StudentService(StudentRepository studentRepository) {
+//        this.studentRepository = studentRepository;
+//    }
+//
+//    /**
+//     * Lấy danh sách tất cả học sinh và chuyển đổi sang DTO.
+//     * @return List<StudentResponseDTO>
+//     */
+//    public List<StudentResponseDTO> getAllStudents() {
+//        // 1. Lấy tất cả Student entity từ CSDL
+//        List<Student> students = studentRepository.findAll();
+//
+//        // 2. Dùng stream để duyệt qua danh sách và chuyển đổi mỗi Student entity thành StudentResponseDTO
+//        return students.stream()
+//                .map(student -> new StudentResponseDTO(student))
+//                .collect(Collectors.toList());
+//    }
 }

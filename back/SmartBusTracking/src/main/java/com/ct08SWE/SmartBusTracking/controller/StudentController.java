@@ -25,9 +25,9 @@ public class StudentController {
      * API để lấy về danh sách tất cả học sinh.
      * Client sẽ gọi đến URL: GET http://your-domain/api/v1/students
      */
-    @GetMapping
-    public ResponseEntity<List<StudentResponseDTO>> getAllStudents() {
-        List<StudentResponseDTO> studentList = studentService.getAllStudents();
-        return ResponseEntity.ok(studentList);
-    }
+//    @GetMapping
+//    public ResponseEntity<List<StudentResponseDTO>> getAllStudents() {
+//        List<StudentResponseDTO> studentList = studentService.getAllStudents();
+//        return ResponseEntity.ok(studentList);
+//    }
 }

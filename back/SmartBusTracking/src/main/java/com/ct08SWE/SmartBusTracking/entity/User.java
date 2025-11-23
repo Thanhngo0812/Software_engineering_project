@@ -128,8 +128,8 @@ public class User {
         private String username;
         private String email;
         private String password;
-        private Boolean enabled = true;
-        private Boolean accountNonLocked = true;
+        private boolean enabled = true;
+        private boolean accountNonLocked = true;
         private LocalDateTime createdAt; // Cập nhật
         private Set<Role> roles = new HashSet<>();
         

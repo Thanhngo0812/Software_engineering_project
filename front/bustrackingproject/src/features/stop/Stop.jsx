@@ -201,7 +201,10 @@ const Stops = () => {
                                         title="View"
 
                                     ><FontAwesomeIcon icon={faEye} /></Link>
-                                    <button className="icon-button" title="Edit">
+                                    <button className="icon-button" title="Edit"
+                                             onClick={() => navigate(`/school/stop/edit/${stop.id}`)}
+
+                                    >
                                         <FontAwesomeIcon icon={faPenToSquare} />
                                     </button>
                                     <button className="icon-button" onClick={() => handleDeleteStop(stop.id, stop.name)} title="Delete">

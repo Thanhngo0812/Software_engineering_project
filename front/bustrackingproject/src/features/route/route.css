@@ -1,0 +1,187 @@
+/* Container chính bao quanh nội dung */
+.stops-main-content {
+    padding: 20px;
+    background-color: #f4f6f9; /* Màu nền nhẹ cho toàn trang dashboard */
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header: Tiêu đề và Nút Create */
+.content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.content-header h2 {
+    color: #343a40;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Nút Tạo mới */
+.create-button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.create-button:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+}
+
+/* Phần thân: Box trắng chứa bảng và search */
+.content-body {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+/* Thanh tìm kiếm */
+.search-bar {
+    width: 100%;
+    max-width: 400px;
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    border: 1px solid #ced4da;
+    border-radius: 20px; /* Bo tròn kiểu pill */
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.search-bar:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+}
+
+/* Bảng dữ liệu */
+.stops-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.stops-table th, 
+.stops-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.stops-table th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    border-top: 1px solid #dee2e6;
+}
+
+.stops-table tbody tr:hover {
+    background-color: #f1f3f5;
+}
+
+/* Cột hành động (Actions) */
+.actions-celll {
+    white-space: nowrap;
+    width: 120px;
+}
+
+/* Các nút icon (View, Edit, Delete) */
+.icon-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px 8px;
+    margin-right: 5px;
+    font-size: 16px;
+    color: #6c757d;
+    transition: color 0.2s;
+    border-radius: 4px;
+}
+
+.icon-button:hover {
+    background-color: #e9ecef;
+    color: #007bff;
+}
+
+/* Màu riêng cho từng nút nếu muốn */
+.icon-button[title="Delete"]:hover {
+    color: #dc3545;
+    background-color: #ffebee;
+}
+
+/* Pagination (Phân trang) */
+.pagination-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.page-nav {
+    background-color: white;
+    border: 1px solid #dee2e6;
+    color: #007bff;
+    padding: 6px 12px;
+    margin: 0 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.page-nav:hover:not(:disabled) {
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+}
+
+.page-nav:disabled {
+    color: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.page-number {
+    padding: 6px 12px;
+    margin: 0 2px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.page-number.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+/* Responsive cho mobile */
+@media (max-width: 768px) {
+    .content-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .create-button {
+        width: 100%;
+    }
+
+    .stops-table {
+        display: block;
+        overflow-x: auto; /* Scroll ngang nếu bảng quá rộng */
+    }
+}

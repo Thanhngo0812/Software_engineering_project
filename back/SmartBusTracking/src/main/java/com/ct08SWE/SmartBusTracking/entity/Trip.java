@@ -48,7 +48,7 @@ public class Trip {
     
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
-    private TripStatus status = TripStatus.SCHEDULED;
+    private TripStatus status = TripStatus.scheduled;
     
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;

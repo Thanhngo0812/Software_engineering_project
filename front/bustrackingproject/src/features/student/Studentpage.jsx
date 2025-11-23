@@ -1,228 +1,181 @@
 import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
+import Swal from 'sweetalert2';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faPenToSquare, faTrash, faUserGraduate, faPlus } from '@fortawesome/free-solid-svg-icons';
 
-import '../../assets/style/StudentPage.css'
-import { useStudents } from '../../hooks/useStudent';
+import './StudentPage.css'; // CSS mới đồng bộ
+
+// --- MOCK DATA (Dữ liệu giả) ---
+const MOCK_STUDENTS = [
+    { id: 1, studentId: 'STU001', fullName: 'Lê Hoàng Minh', parentName: 'Lê Văn Cường', email: 'minh@example.com', grade: 'Lớp 3A', status: 'Active' },
+    { id: 2, studentId: 'STU002', fullName: 'Phạm Ngọc Hân', parentName: 'Phạm Thị Duyên', email: 'han@example.com', grade: 'Lớp 5B', status: 'Active' },
+    { id: 3, studentId: 'STU003', fullName: 'Nguyễn Văn An', parentName: 'Nguyễn Văn Ba', email: 'an@example.com', grade: 'Lớp 2C', status: 'Inactive' },
+    { id: 4, studentId: 'STU004', fullName: 'Trần Thị Bưởi', parentName: 'Trần Văn Cam', email: 'buoi@example.com', grade: 'Lớp 4A', status: 'Active' },
+    { id: 5, studentId: 'STU005', fullName: 'Hoàng Văn Em', parentName: 'Hoàng Thị Chị', email: 'em@example.com', grade: 'Lớp 1A', status: 'Active' },
+    { id: 6, studentId: 'STU006', fullName: 'Đỗ Nam Trung', parentName: 'Đỗ Văn Bắc', email: 'trung@example.com', grade: 'Lớp 5A', status: 'Active' },
+];
 
 const StudentPage = () => {
-    const { students, loading, error } = useStudents();
-    console.log(students)
-    function capitalize(str) {
-        if (!str) return '';
-        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-    }
-    useEffect(() => {
-        if (error) {
-            // Sử dụng error.message để gọi toast
-            toast.error(error); 
+    // State quản lý dữ liệu
+    const [students, setStudents] = useState(MOCK_STUDENTS);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [currentPage, setCurrentPage] = useState(0);
+    const pageSize = 5;
+
+    // 1. Xử lý Tìm kiếm (Client-side filtering)
+    const filteredStudents = students.filter(student => 
+        student.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        student.studentId.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        student.parentName.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    // 2. Xử lý Phân trang (Client-side pagination)
+    const pageCount = Math.ceil(filteredStudents.length / pageSize);
+    const displayedStudents = filteredStudents.slice(
+        currentPage * pageSize, 
+        (currentPage + 1) * pageSize
+    );
+
+    // 3. Hàm chuyển trang
+    const handlePageChange = (newPage) => {
+        if (newPage >= 0 && newPage < pageCount) {
+            setCurrentPage(newPage);
         }
-        // Dependency Array: Sẽ chạy lại mỗi khi đối tượng 'error' thay đổi
-        // (Chúng ta sẽ đảm bảo nó luôn thay đổi ở handleSubmit/validate)
-    }, [error]); 
-    return (<>
-        {/* Hello world */}
-        <div className="wrap">
-          <div className="card" role="region" aria-label="Students panel">
-            <div className="topbar">
-              <div className="title">
-                <div className="icon" aria-hidden="">
-                  {/* clipboard icon */}
-                  <svg
-                    width={18}
-                    height={18}
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M9 2h6v2h2a1 1 0 011 1v14a1 1 0 01-1 1H6a1 1 0 01-1-1V5a1 1 0 011-1h2V2z"
-                      stroke="#c98f3a"
-                      strokeWidth="1.1"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      fill="none"
-                    />
-                  </svg>
-                </div>
-                Students
-              </div>
-              <div className="actions">
-                <button className="btn btn--download" title="Download .xlsx">
-                  <svg width={16} height={16} viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M12 3v10"
-                      stroke="white"
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M8 11l4 4 4-4"
-                      stroke="white"
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <rect
-                      x={4}
-                      y={16}
-                      width={16}
-                      height={4}
-                      rx={1}
-                      fill="rgba(255,255,255,0.06)"
-                    />
-                  </svg>
-                  DOWNLOAD .XLSX TEMPLATE
+    };
+
+    // 4. Xử lý Xóa (Mock Delete)
+    const handleDelete = (id, name) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `Do you want to remove student "${name}"?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Xóa khỏi state mock
+                setStudents(prev => prev.filter(s => s.id !== id));
+                toast.success(`Deleted student ${name}`);
+            }
+        });
+    };
+
+    const createPageDescrip = () => {
+        if (filteredStudents.length === 0) return '0 - 0 of 0';
+        const start = currentPage * pageSize + 1;
+        const end = Math.min((currentPage + 1) * pageSize, filteredStudents.length);
+        return `${start} - ${end} of ${filteredStudents.length}`;
+    };
+
+    return (
+        <div className="student-main-content">
+            {/* HEADER */}
+            <div className="content-header">
+                <h2>
+                    <span role="img" aria-label="student-icon">
+                        <FontAwesomeIcon icon={faUserGraduate} />
+                    </span> 
+                    Students Management
+                </h2>
+                <button className="create-button" onClick={() => toast.info("This is a mock feature for demo.")}>
+                    CREATE +
                 </button>
-                <button className="btn btn--upload" title="Upload .xlsx">
-                  <svg width={16} height={16} viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M12 3v10"
-                      stroke="white"
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M8 11l4 4 4-4"
-                      stroke="white"
-                      strokeWidth="1.6"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  UPLOAD .XLSX FILE
-                </button>
-              </div>
             </div>
-            {/* Tabs */}
-            <div className="tabs" role="tablist" aria-label="Student tabs">
-              <div className="tab tab--active" role="tab" data-filter="active">
-                <svg
-                  width={16}
-                  height={16}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  aria-hidden=""
-                >
-                  <path
-                    d="M12 2v20"
-                    stroke="#c77f2a"
-                    strokeWidth="1.6"
-                    strokeLinecap="round"
-                  />
-                </svg>
-                ACTIVE
-              </div>
-              <div className="tab" role="tab" data-filter="suspended">
-                <svg
-                  width={16}
-                  height={16}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  aria-hidden=""
-                >
-                  <circle cx={12} cy={12} r={8} stroke="#8f9599" strokeWidth="1.2" />
-                </svg>
-                SUSPENDED
-              </div>
-              <div className="tab" role="tab" data-filter="under-review">
-                <svg
-                  width={16}
-                  height={16}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  aria-hidden=""
-                >
-                  <path d="M4 12h16" stroke="#8f9599" strokeWidth="1.2" />
-                </svg>
-                UNDER REVIEW
-              </div>
-              <div className="tab" role="tab" data-filter="out-of-coins">
-                <svg
-                  width={16}
-                  height={16}
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  aria-hidden=""
-                >
-                  <path
-                    d="M12 2a10 10 0 110 20 10 10 0 010-20z"
-                    stroke="#8f9599"
-                    strokeWidth="1.2"
-                  />
-                </svg>
-                OUT OF COINS
-              </div>
-            </div>
-            {/* Search */}
-            <div className="search">
-              <input
-                id="searchInput"
-                placeholder="Search"
-                aria-label="Search students"
-              />
-            </div>
-            <div className="table-wrap" role="table" aria-label="Students table">
-              <table>
-                <thead>
-                  <tr>
-                    <th className="col-id">ID</th>
-                    <th className="col-name">Name</th>
-                    <th className="col-parent">Parent Name</th>
-                    <th className="col-email">Student Email</th>
-                    <th className="col-status">Status</th>
-                    <th className="col-created">Created</th>
-                    <th className="actions-cell">Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="tableBody">
-                  {/* rows will be inserted here by JS for easier demo */}
-                  {students.map(r => (
-                        <tr key={r.id}>
-                            <td data-label="ID">{r.studentId}</td>
-                            <td data-label="Name">{r.fullname}</td>
-                            <td data-label="Parent Name">{r.parentFullname}</td>
-                            <td data-label="Student Email">{r.studentEmail}</td>
-                            <td data-label="Status">
-                                <span className={`badge ${r.accountLocked ? 'inactive': 'active'}`}>
-                                    {capitalize(r.accountLocked?'Bị khóa':'active')}
-                                </span>
-                            </td>
-                            <td data-label="Created">{r.accountCreatedAt}</td>
-                            <td className="actions-cell" data-label="Actions">
-                            <button className="icon-btn" title="View" aria-label="View">
-                                <FontAwesomeIcon icon={faEye} />
-                            </button>
-                            <button className="icon-btn" title="Edit" aria-label="Edit">
-                                <FontAwesomeIcon icon={faPenToSquare} />
-                            </button>
-                            <button className="icon-btn" title="Delete" aria-label="Delete">
-                                <FontAwesomeIcon icon={faTrash} />
-                            </button>
-                            </td>
+
+            {/* BODY */}
+            <div className="content-body">
+                {/* Search Bar */}
+                <input
+                    type="text"
+                    placeholder="Search by Name, ID or Parent..."
+                    className="search-bar"
+                    value={searchQuery}
+                    onChange={(e) => {
+                        setSearchQuery(e.target.value);
+                        setCurrentPage(0); // Reset về trang 1 khi search
+                    }}
+                />
+
+                {/* Table */}
+                <table className="student-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Full Name</th>
+                            <th>Parent Name</th>
+                            <th>Email</th>
+                            <th>Class</th>
+                            <th>Status</th>
+                            <th className="text-center">Actions</th>
                         </tr>
-                    ))}
-                </tbody>
-              </table>
+                    </thead>
+                    <tbody>
+                        {displayedStudents.length > 0 ? (
+                            displayedStudents.map((student) => (
+                                <tr key={student.id}>
+                                    <td>{student.studentId}</td>
+                                    <td><strong>{student.fullName}</strong></td>
+                                    <td>{student.parentName}</td>
+                                    <td>{student.email}</td>
+                                    <td>{student.grade}</td>
+                                    <td>
+                                        <span className={`status-badge ${student.status.toLowerCase()}`}>
+                                            {student.status}
+                                        </span>
+                                    </td>
+                                    <td className="actions-cell">
+                                        <button className="icon-button" title="View">
+                                            <FontAwesomeIcon icon={faEye} />
+                                        </button>
+                                        <button className="icon-button" title="Edit">
+                                            <FontAwesomeIcon icon={faPenToSquare} />
+                                        </button>
+                                        <button 
+                                            className="icon-button" 
+                                            title="Delete"
+                                            onClick={() => handleDelete(student.id, student.fullName)}
+                                        >
+                                            <FontAwesomeIcon icon={faTrash} />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="7" style={{textAlign: 'center', padding: '20px'}}>
+                                    No students found matching your search.
+                                </td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+
+                {/* Pagination */}
+                <div className="pagination-container">
+                    <div style={{ marginRight: 10, fontSize: '14px', color: '#666' }}>
+                        {createPageDescrip()}
+                    </div>
+                    <button
+                        className="page-nav"
+                        onClick={() => handlePageChange(currentPage - 1)}
+                        disabled={currentPage === 0}
+                    >
+                        &laquo; Previous
+                    </button>
+                    <span className="page-number active">{currentPage + 1}</span>
+                    <button
+                        className="page-nav"
+                        onClick={() => handlePageChange(currentPage + 1)}
+                        disabled={currentPage >= pageCount - 1}
+                    >
+                        Next &raquo;
+                    </button>
+                </div>
             </div>
-            <div className="table-footer">
-              <div className="rows-per">
-                Rows per page:
-                <select id="rowsPer">
-                  <option>5</option>
-                  <option selected="">10</option>
-                  <option>20</option>
-                </select>
-              </div>
-              <div id="paginationInfo">1-4 of 4</div>
-            </div>
-          </div>
         </div>
-      </>
-      );
+    );
 };
 
 export default StudentPage;

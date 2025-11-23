@@ -1,0 +1,76 @@
+.parent-screen {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    font-family: sans-serif;
+}
+
+.parent-header {
+    background: white; padding: 15px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    z-index: 10;
+}
+.parent-header h3 { margin: 0 0 5px 0; color: #333; }
+
+.live-status {
+    display: flex; align-items: center; gap: 10px;
+    color: #2ecc71; font-weight: bold; font-size: 14px;
+}
+.live-dot {
+    width: 10px; height: 10px; background: #2ecc71; border-radius: 50%;
+    animation: blink 1s infinite;
+}
+.speed-info { color: #555; font-weight: normal; margin-left: auto; }
+
+.parent-map { flex: 1; width: 100%; }
+
+.bus-marker-parent { font-size: 30px; transform: translateY(-50%); filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3)); }
+
+.stop-marker-parent {
+    width: 20px; height: 20px; background: #3498db; color: white;
+    border-radius: 50%; border: 2px solid white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.parent-footer {
+    background: white; padding: 20px;
+    border-top-left-radius: 20px; border-top-right-radius: 20px;
+    margin-top: -20px; z-index: 10;
+}
+
+.driver-info-card {
+    display: flex; align-items: center; gap: 15px;
+    background: #f8f9fa; padding: 15px; border-radius: 12px;
+}
+.driver-img { font-size: 30px; background: #ddd; border-radius: 50%; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; }
+.driver-text h4 { margin: 0; font-size: 16px; }
+.driver-text p { margin: 2px 0 0 0; color: #666; font-size: 13px; }
+.btn-call {
+    margin-left: auto; background: #2ecc71; color: white; border: none;
+    padding: 8px 15px; border-radius: 20px; font-weight: bold; cursor: pointer;
+}
+.no-trip {
+    display: flex; justify-content: center; align-items: center; height: 100%; color: #888;
+}
+
+.parent-error-screen {
+    display: flex; justify-content: center; align-items: center;
+    height: 100vh; background-color: #f7f9fc;
+}
+
+.error-card {
+    background: white; padding: 30px; border-radius: 15px;
+    text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    max-width: 300px; width: 90%;
+}
+
+.error-card h3 { color: #333; margin-top: 15px; margin-bottom: 10px; }
+.error-card p { color: #666; font-size: 14px; margin-bottom: 20px; }
+
+.btn-back-home {
+    display: inline-flex; align-items: center; gap: 8px;
+    text-decoration: none;
+    background: #34495e; color: white;
+    padding: 10px 20px; border-radius: 8px;
+    font-weight: bold; font-size: 14px;
+}

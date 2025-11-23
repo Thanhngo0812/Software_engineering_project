@@ -1,5 +1,8 @@
 import { useState, useCallback } from 'react';
 import authService from '../../auth/services/authService';
+import axios from 'axios';
+
+const API_BASE_URL = 'http://localhost:8081'; // Đảm bảo port đúng với backend của bạn
 
 const useApiStop = () => {
     // State để theo dõi trạng thái đang tải
@@ -8,7 +11,33 @@ const useApiStop = () => {
     const [error, setError] = useState(null);
     // State để lưu dữ liệu trả về từ server
     const [data, setData] = useState(null);
-
+  // 1. Lấy chi tiết Stop (cho chức năng Edit)
+    const getStopById = async (id) => {
+        setIsLoading(true);
+        try {
+            const response = await axios.get(`${API_BASE_URL}/api/school/v1/stops/${id}`);
+            return response.data; 
+            // Response kỳ vọng: { id, name, address, latitude, longitude ... }
+        } catch (err) {
+            setError(err.response?.data || err);
+            throw err;
+        } finally {
+            setIsLoading(false);
+        }
+    };
+      const updateStop = async (id, stopData) => {
+        setIsLoading(true);
+        try {
+            const response = await axios.put(`${API_BASE_URL}/api/school/v1/stops/${id}`, stopData);
+            setData(response.data);
+            return response.data;
+        } catch (err) {
+            setError(err.response?.data || err);
+            throw err;
+        } finally {
+            setIsLoading(false);
+        }
+    };
     // Hàm để thực hiện việc tạo stop, dùng useCallback để tối ưu
     const createStop = useCallback(async (stopData) => {
         // Reset trạng thái trước khi gọi API mới
@@ -62,7 +91,7 @@ const useApiStop = () => {
     }, []);
 
     // Trả về các state và hàm để component có thể sử dụng
-    return { createStop, isLoading, error, data };
+    return { createStop, getStopById,updateStop, isLoading, error, data };
 };
 
 export default useApiStop;

@@ -43,14 +43,36 @@ const Sidebar = ({ isOpen }) => {
             {renderMenuItem("Dashboard", "#")} 
             
             <p>Users</p>
-            {renderMenuItem("Students", "#")}
-            {renderMenuItem("Guardians", "#")}
-            {renderMenuItem("Drivers", "#")}
+             <Link 
+                to="/school/student"
+                className={activeItem === 'Student' ? 'active' : ''}
+                onClick={() => handleItemClick('Student')}
+            >
+                Student
+            </Link>
+                        <Link 
+                to="/school/driver"
+                className={activeItem === 'Driver' ? 'active' : ''}
+                onClick={() => handleItemClick('Driver')}
+            >
+                Driver
+            </Link>
             
             <p className="medium-text">SYSTEM SETUP</p>
-            {renderMenuItem("School", "#")}
-            {renderMenuItem("Buses", "#")}
-            {renderMenuItem("Routes", "#")}
+            <Link 
+                to="/school/bus"
+                className={activeItem === 'buses' ? 'active' : ''}
+                onClick={() => handleItemClick('buses')}
+            >
+                Buses
+            </Link>
+             <Link 
+                to="/school/route"
+                className={activeItem === 'Routes' ? 'active' : ''}
+                onClick={() => handleItemClick('Routes')}
+            >
+                Routes
+            </Link>
             
             {/* Stops: Sử dụng Link và isLink=true */}
             {/* LƯU Ý: Nếu bạn dùng React Router, hãy dùng đường dẫn (e.g., /school/stop) làm key */}
@@ -62,7 +84,13 @@ const Sidebar = ({ isOpen }) => {
                 Stops
             </Link>
             
-            {renderMenuItem("Trips", "#")}
+              <Link 
+                to="/school/trip"
+                className={activeItem === 'Trips' ? 'active' : ''}
+                onClick={() => handleItemClick('Trips')}
+            >
+                Trips
+            </Link>
             
             <p className="medium-text">LIVE</p>
             {renderMenuItem("Live Tracking", "#")}

@@ -24,6 +24,7 @@ public interface StopService {
     // Trong tương lai, bạn có thể thêm các định nghĩa hàm khác ở đây
     // ví dụ: StopResponseDto createStop(StopRequestDto stopRequest);
     //        void deleteStop(int id);
+    StopResponseDTO updateStop(int id,StopRequestDTO stopRequestDto);
     StopDetailDTO getStopDetailsById(Long id);
 
 }
