@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios'; 
 import tt from '@tomtom-international/web-sdk-maps';
+import { useParams, Link } from 'react-router-dom';
 import '@tomtom-international/web-sdk-maps/dist/maps.css';
 import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
@@ -17,7 +18,8 @@ const DriverDashboard = () => {
     const { getMyTrips, startTrip, completeTrip, getTripRoute, sendLocationUpdate, getStudentManifest, markStudentAttendance } = useDriverApp();
 const navigate = useNavigate();
 
-    const driverId = 1; 
+    const { driverId } = useParams(); 
+
 
     const [trips, setTrips] = useState([]);
     const [activeTrip, setActiveTrip] = useState(null);

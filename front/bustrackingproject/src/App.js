@@ -66,7 +66,7 @@ function App() {
         <Route element={<ProtectedRoute requiredRole="ROLE_STUDENT" />}>
                   <Route path="/student" element={<StudentPage/>} />
         </Route>
-          <Route path='/driver' element={<DriverDashboard/>}/>
+          <Route path='/driver/:driverId' element={<DriverDashboard/>}/>
         <Route path="/tracking/:studentId" element={<ParentTrackingPage />} />
        
       </Routes>

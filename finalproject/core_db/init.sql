@@ -214,7 +214,9 @@ INSERT INTO users (id, username, email, password) VALUES
                                                       (3, 'driver.an@example.com', 'driver.an@example.com', '$2a$10$YrCP/3TM6Gfx0sOhCQ2V..8aihMHExTJpsDWoEdc029EwFdiZ5RXC'),
                                                       (4, 'driver.binh@example.com', 'driver.binh@example.com', '$2a$10$YrCP/3TM6Gfx0sOhCQ2V..8aihMHExTJpsDWoEdc029EwFdiZ5RXC'),
                                                       (5, 'student.minh@example.com', 'student.minh@example.com', '$2a$10$YrCP/3TM6Gfx0sOhCQ2V..8aihMHExTJpsDWoEdc029EwFdiZ5RXC'),
-                                                      (6, 'student.han@example.com', 'student.han@example.com', '$2a$10$YrCP/3TM6Gfx0sOhCQ2V..8aihMHExTJpsDWoEdc029EwFdiZ5RXC');
+                                                      (6, 'student.han@example.com', 'student.han@example.com', '$2a$10$YrCP/3TM6Gfx0sOhCQ2V..8aihMHExTJpsDWoEdc029EwFdiZ5RXC'),
+                                                      (7, 'student.khai@example.com', 'student.khai@example.com', '$2a$10$YrCP/3TM6Gfx0sOhCQ2V..8aihMHExTJpsDWoEdc029EwFdiZ5RXC'),
+                                                      (8, 'student.ha@example.com', 'student.ha@example.com', '$2a$10$YrCP/3TM6Gfx0sOhCQ2V..8aihMHExTJpsDWoEdc029EwFdiZ5RXC');
 SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));
 
 -- User Roles
@@ -247,33 +249,28 @@ SELECT setval('guardians_id_seq', (SELECT MAX(id) FROM guardians));
 INSERT INTO stops (id, stop_name, address, latitude, longitude) VALUES
                                                                     (1, 'Nhà thờ Đức Bà', '01 Công xã Paris, Bến Nghé, Quận 1', 10.7798, 106.6991),
                                                                     (2, 'Chợ Bến Thành', 'Đ. Lê Lợi, Phường Bến Thành, Quận 1', 10.7725, 106.6983),
-                                                                    (3, 'Dinh Độc Lập', '135 Nam Kỳ Khởi Nghĩa, Bến Thành, Quận 1', 10.7770, 106.6952);
+                                                                    (3, 'Trường học', '135 Nam Kỳ Khởi Nghĩa, Bến Thành, Quận 1', 10.7770, 106.6952),
+                                                                    (4, 'Trạm 1','136 Nam Kỳ Khởi Nghĩa, Bến Thành, Quận 3', 13.7725, 109.6983),
+                                                                    (5, 'Trạm 2' ,'138 Nam Kỳ Khởi Nghĩa, Bến Thành, Quận 3', 13.7770, 109.6952);
 SELECT setval('stops_id_seq', (SELECT MAX(id) FROM stops));
 
 -- Students
 INSERT INTO students (id, user_id, school_id, guardian_id, full_name, email, grade_level, pickup_stop_id, dropoff_stop_id) VALUES
                                                                                                                                (1, 5, 1, 1, 'Lê Hoàng Minh', 'student.minh@example.com', 'Lớp 3', 1, 3),
-                                                                                                                               (2, 6, 1, 2, 'Phạm Ngọc Hân', 'student.han@example.com', 'Lớp 5', 2, 3);
+                                                                                                                               (2, 6, 1, 2, 'Phạm Ngọc Hân', 'student.han@example.com', 'Lớp 5', 2, 3),
+                                                                                                                               (3, 7, 1, 1, 'Lê Hoàng Khải', 'student.khai@example.com', 'Lớp 3', 4, 3),
+                                                                                                                               (4, 8, 1, 2, 'Phạm Ngọc Hà', 'student.ha@example.com', 'Lớp 5', 5, 3);
 SELECT setval('students_id_seq', (SELECT MAX(id) FROM students));
 
 -- Routes
 INSERT INTO routes (id, school_id, route_name, description) VALUES
-    (1, 1, 'Tuyến Sáng Trung Tâm Quận 1', 'Tuyến xe đón học sinh khu vực trung tâm Q1 buổi sáng.');
+    (1, 1, 'Tuyến Sáng Trung Tâm Quận 1', 'Tuyến xe đón học sinh khu vực trung tâm Q1 buổi sáng.'),
+(2, 1, 'Tuyến Sáng Trung Tâm Quận 2', 'Tuyến xe đón học sinh khu vực trung tâm Q2 buổi sáng.');
+
 SELECT setval('routes_id_seq', (SELECT MAX(id) FROM routes));
 
-INSERT INTO route_stops (route_id, stop_id, stop_order) VALUES (1, 1, 1), (1, 2, 2), (1, 3, 3);
+INSERT INTO route_stops (route_id, stop_id, stop_order) VALUES (1, 1, 1), (1, 2, 2), (1, 3, 3),
+                                                               (2, 4, 1), (2, 5, 2), (2, 3, 3);
 
--- Trips
-INSERT INTO trips (id, route_id, bus_id, driver_id, trip_date, direction, planned_start_time, status, actual_start_time) VALUES
-    (1, 1, 1, 1, CURRENT_DATE, 'to_school', '07:00:00', 'in_progress', NOW());
-SELECT setval('trips_id_seq', (SELECT MAX(id) FROM trips));
 
--- Attendance
-INSERT INTO attendance (trip_id, student_id, stop_id, status, timestamp) VALUES
-    (1, 1, 1, 'boarded', NOW());
-SELECT setval('attendance_id_seq', (SELECT MAX(id) FROM attendance));
 
--- Live Tracking
-INSERT INTO live_tracking (trip_id, latitude, longitude, speed, timestamp) VALUES
-                                                                               (1, 10.7798, 106.6991, 0.0, NOW()),
-                                                                               (1, 10.7775, 106.6988, 25.5, NOW() + interval '1 minute');
